@@ -1,4 +1,5 @@
 # BioMapper Lite Project - Main .gitignore
+*.tab
 
 # Dependencies
 node_modules/
