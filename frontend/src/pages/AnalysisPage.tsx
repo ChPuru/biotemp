@@ -176,10 +176,10 @@ const AnalysisPage: React.FC = () => {
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
                 <div>
-                    <h1 style={{ margin: '0 0 10px 0', color: '#2c3e50' }}>
+                    <h1 style={{ margin: '0 0 10px 0', color: 'var(--text-heading)' }}>
                         🔬 Advanced Bioinformatics Analysis Suite
                     </h1>
-                    <p style={{ margin: '0', color: '#7f8c8d', fontSize: '16px' }}>
+                    <p style={{ margin: '0', color: 'var(--text-secondary)', fontSize: '16px' }}>
                         Cutting-edge research tools powered by AI, quantum computing, and GPU acceleration
                     </p>
                 </div>
@@ -206,7 +206,7 @@ const AnalysisPage: React.FC = () => {
             {/* Tab Navigation */}
             <div style={{
                 display: 'flex',
-                borderBottom: '2px solid #ecf0f1',
+                borderBottom: '2px solid var(--border-light)',
                 marginBottom: '30px',
                 overflowX: 'auto',
                 paddingBottom: '10px'
@@ -219,8 +219,8 @@ const AnalysisPage: React.FC = () => {
                                 width: '100%',
                                 padding: '15px 20px',
                                 border: 'none',
-                                background: activeTab === tab.id ? '#3498db' : 'transparent',
-                                color: activeTab === tab.id ? 'white' : '#2c3e50',
+                                background: activeTab === tab.id ? 'var(--accent-primary)' : 'transparent',
+                                color: activeTab === tab.id ? '#ffffff' : 'var(--text-body)',
                                 borderRadius: '12px',
                                 cursor: 'pointer',
                                 fontWeight: 'bold',
@@ -507,13 +507,13 @@ const AnalysisPage: React.FC = () => {
                 {activeTab === 'core' && (
                     <div>
                         <div style={{
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            background: 'var(--gradient-primary)',
                             padding: '20px',
                             borderRadius: '15px',
                             color: 'white',
                             marginBottom: '20px'
                         }}>
-                            <h3 style={{ margin: '0 0 10px 0' }}>🧬 Core eDNA Analysis Pipeline</h3>
+                            <h3 style={{ margin: '0 0 10px 0', color: '#fff' }}>🧬 Core eDNA Analysis Pipeline</h3>
                             <p style={{ margin: '0', opacity: '0.9' }}>
                                 Upload an eDNA sample and get real-time, multi-expert AI analysis of the biodiversity within.
                             </p>

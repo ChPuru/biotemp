@@ -45,6 +45,14 @@ function App() {
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
+    // Cleanup legacy UI attributes/preferences
+    try {
+      const root = document.documentElement;
+      root.removeAttribute('data-high-contrast');
+      root.removeAttribute('data-glow');
+      localStorage.removeItem('ui.highContrast');
+      localStorage.removeItem('ui.glow');
+    } catch {}
   }, []);
 
 

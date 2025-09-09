@@ -464,7 +464,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
         plugins: {
             legend: {
                 labels: {
-                    color: '#E0E0E0',
+                    color: '#0f172a',
                     font: {
                         family: 'Inter, sans-serif',
                         size: 12,
@@ -473,10 +473,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                 }
             },
             tooltip: {
-                backgroundColor: 'rgba(30, 30, 30, 0.95)',
-                titleColor: '#ffffff',
-                bodyColor: '#E0E0E0',
-                borderColor: 'rgba(0, 170, 255, 0.3)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#0b1220',
+                bodyColor: '#0f172a',
+                borderColor: 'rgba(30, 64, 175, 0.2)',
                 borderWidth: 1,
                 cornerRadius: 8,
                 displayColors: true,
@@ -492,14 +492,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
         scales: {
             x: {
                 ticks: {
-                    color: '#E0E0E0',
+                    color: '#0f172a',
                     font: {
                         family: 'Fira Code, monospace',
                         size: 10
                     }
                 },
                 grid: {
-                    color: 'rgba(255, 255, 255, 0.1)',
+                    color: 'rgba(15, 23, 42, 0.08)',
                     drawBorder: false
                 }
             },
@@ -507,7 +507,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                 beginAtZero: true,
                 max: 1,
                 ticks: {
-                    color: '#E0E0E0',
+                    color: '#0f172a',
                     font: {
                         family: 'Fira Code, monospace',
                         size: 10
@@ -517,7 +517,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                     }
                 },
                 grid: {
-                    color: 'rgba(255, 255, 255, 0.1)',
+                    color: 'rgba(15, 23, 42, 0.08)',
                     drawBorder: false
                 }
             }

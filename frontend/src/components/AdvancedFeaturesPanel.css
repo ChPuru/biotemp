@@ -1,4 +1,126 @@
 .advanced-features-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-primary);
+}
+
+.panel-header h2 {
+  margin: 0 0 4px 0;
+  color: var(--text-heading);
+}
+
+.panel-header p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.tab-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.tab-button {
+  background: var(--card-bg);
+  color: var(--text-body);
+  border: 1px solid var(--border-light);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.tab-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-primary);
+}
+
+.tab-button.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.tab-content-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.feature-section {
+  display: grid;
+  gap: 12px;
+}
+
+.status-card, .jobs-container, .cost-estimate-card, .benchmark-info, .case-study-card, .job-status-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.status-card h4, .jobs-container h4, .cost-estimate-card h4 {
+  margin-top: 0;
+  color: var(--text-heading);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.primary-button {
+  background: var(--accent-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-primary);
+  cursor: pointer;
+}
+
+.secondary-button {
+  background: var(--accent-secondary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: var(--shadow-secondary);
+  cursor: pointer;
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-id {
+  font-family: 'Fira Code', monospace;
+  color: var(--text-secondary);
+}
+
+.job-status.running { color: var(--accent-secondary); }
+.job-status.stopped { color: var(--accent-danger); }
+.job-status.pending { color: var(--accent-warning); }
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 9999px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 9999px;
+}
+.advanced-features-panel {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 12px;
     padding: 24px;

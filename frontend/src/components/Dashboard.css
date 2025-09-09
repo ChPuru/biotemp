@@ -104,10 +104,11 @@
 
 .input-group label {
   font-weight: bold;
+  color: var(--text-heading);
 }
 
 .input-group input {
-  padding: 8px;
+  padding: 10px;
   background-color: var(--card-bg);
   color: var(--text-body);
   border: 1px solid var(--border-medium);
