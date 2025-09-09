@@ -1,0 +1,391 @@
+# Backend .gitignore
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory
+coverage/
+
+# Build outputs
+build/
+dist/
+
+# Uploads
+uploads/
+user_data/
+temp_files/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+fl_history.db
+
+# API keys and secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Security logs
+security_logs/
+audit_logs/
+
+# Blockchain data
+blockchain_data/
+ledger_backup/
+
+# Performance monitoring
+performance_logs/
+monitoring_data/
+
+# Cache
+.cache/
+cache/
+*.cache
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local development
+local/
+dev/
+test_data/
+
+# Configuration files
+config.local.js
+config.local.json
+settings.local.js
+settings.local.json
+
+# Test results
+test-results/
+test-reports/
+
+# Backup files
+*.bak
+*.backup
+backup/
+
+# Compressed files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+
+# Large data files
+*.fasta
+*.fa
+*.fq
+*.fastq
+*.sam
+*.bam
+*.vcf
+*.gff
+*.gtf
+*.bed
+
+# Model files
+*.model
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.onnx
+
+# Quantum job results
+quantum_results/
+fl_results/
+
+# Compliance data
+compliance_data/
+audit_data/
+
+# Security data
+security_data/
+threat_intelligence/
+
+# Machine learning models
+ml_models/
+ai_models/
+trained_models/
+
+# Data processing
+processed_data/
+raw_data/
+intermediate_data/
+
+# Reports
+reports/
+analysis_reports/
+generated_reports/
+
+# Cost analysis data
+cost_analysis/
+budget_data/
+
+# Real-world case study data
+case_studies/data/
+policy_data/
+
+# Benchmark results
+benchmark_results/
+performance_tests/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Local development overrides
+docker-compose.local.yml
+.env.local
+.env.development
+.env.production
+
+# Lock files
+*.lock
+
+# Package files
+*.deb
+*.rpm
+*.dmg
+*.pkg
+*.msi
+
+# Executables
+*.exe
+*.app
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# Scripts
+*.sh
+*.bat
+*.cmd
+*.ps1
+
+# Configuration files (keep templates)
+*.conf
+*.config
+*.ini
+*.cfg
+!*.template
+!*.example
+
+# IDE specific
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/shelf
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Local development
+local/
+dev/
+development/
+
+# Production
+production/
+prod/
+
+# Staging
+staging/
+stage/
+
+# Testing
+test/
+tests/
+testing/
+
+# Documentation
+docs/
+documentation/
+
+# Examples
+examples/
+samples/
+
+# Demos
+demos/
+demo/
+
+# Tutorials
+tutorials/
+tutorial/
+
+# Guides
+guides/
+guide/
+
+# API documentation
+api-docs/
+swagger/
+
+# OpenAPI
+openapi/
+swagger/
+
+# GraphQL
+schema.graphql
+schema.json
+
+# Prisma
+prisma/migrations/
+prisma/dev.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Rollup.js default build output
+dist/
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*

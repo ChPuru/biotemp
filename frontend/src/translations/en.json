@@ -1,0 +1,48 @@
+{
+  "title": "BioMapper Lite",
+  "subtitle": "The Edge-Optimized eDNA Discovery Engine",
+  "controls_header": "Controls",
+  "language_label": "Language",
+  "main_header": "Pillar 1: The Accuracy & Impact Engine",
+  "upload_prompt": "Upload your 'Golden Dataset' (FASTA format)",
+  "analyze_button": "Analyze Marine Sample",
+  "analysis_complete": "Analysis Complete!",
+  "results_header": "Analysis Results",
+  "biodiversity_header": "Biodiversity Assessment",
+  "species_richness": "Species Richness",
+  "shannon_index": "Shannon Diversity Index",
+  "impact_header": "Conservation Impact Report",
+  "speed_header": "Pillar 2: The Speed Engine (Quantum-Inspired Alignment)",
+  "speed_button": "Run Speed Comparison",
+  "xai_button": "Why this prediction?",
+  "federated_learning_header": "Vision: The Federated Learning Platform",
+  "federated_learning_button": "Simulate FL Training Round",
+  "policy_header": "Policy & Compliance",
+  "policy_button": "View Policy Alignment"
+  ,"latitude": "Latitude"
+  ,"longitude": "Longitude"
+  ,"locating": "Locating..."
+  ,"get_location": "Get My Location"
+  ,"analyzing": "Analyzing..."
+  ,"generate_pdf": "Generate PDF"
+  ,"satellite.header": "Advanced Satellite Intelligence"
+  ,"satellite.subheader": "Integrate ISRO Bhuvan satellite data for comprehensive biodiversity monitoring"
+  ,"satellite.latitude": "Latitude"
+  ,"satellite.longitude": "Longitude"
+  ,"satellite.start_date": "Start Date"
+  ,"satellite.end_date": "End Date"
+  ,"satellite.loading": "Loading..."
+  ,"satellite.get_imagery": "📸 Get Satellite Imagery"
+  ,"satellite.analyzing": "Analyzing..."
+  ,"satellite.habitat_change": "🌿 Analyze Habitat Change"
+  ,"satellite.predicting": "Predicting..."
+  ,"satellite.hotspots": "🎯 Predict Biodiversity Hotspots"
+  ,"satellite.imagery_header": "ISRO Bhuvan Satellite Imagery"
+  ,"satellite.habitat_header": "Habitat Change Analysis"
+  ,"satellite.deforestation": "Deforestation Rate"
+  ,"satellite.urbanization": "Urbanization Index"
+  ,"satellite.water_change": "Water Body Change"
+  ,"satellite.vegetation": "Vegetation Health"
+  ,"satellite.alerts": "Environmental Alerts"
+  ,"satellite.hotspots_header": "Predicted Biodiversity Hotspots"
+}

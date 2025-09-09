@@ -1,0 +1,238 @@
+/* frontend/src/components/Dashboard.css */
+
+.error-message {
+  color: #e76f51;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.results-table {
+  width: 100%;
+  margin-top: 15px;
+  border-collapse: collapse;
+}
+
+.results-table th, .results-table td {
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+  vertical-align: middle;
+}
+
+.results-table th {
+  background-color: #2a2a2a;
+}
+
+.results-section-header {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+/* --- THIS IS THE FIX --- */
+.chart-container {
+  position: relative;
+  height: 400px; /* Give the container a fixed height */
+  width: 100%;
+  margin-top: 20px;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+}
+/* ---------------------- */
+
+.action-button {
+  padding: 5px 10px;
+  font-size: 0.8em;
+  margin-right: 5px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.queued-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 0.7em;
+  border-radius: 10px;
+  background: #b08968;
+  color: #fff;
+}
+
+.confirm-button {
+  background-color: #2a9d8f;
+  color: white;
+}
+.confirm-button:hover {
+  background-color: #248a7f;
+}
+
+.flag-button {
+  background-color: #e76f51;
+  color: white;
+}
+.flag-button:hover {
+  background-color: #d06448;
+}
+
+.policy-button {
+  margin-left: 10px;
+  background-color: #5a67d8;
+}
+.policy-button:hover {
+  background-color: #4c58b5;
+}
+/* Add these new styles to your existing Dashboard.css file */
+
+.input-group {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-group label {
+  font-weight: bold;
+}
+
+.input-group input {
+  padding: 8px;
+  background-color: #333;
+  color: #e0e0e0;
+  border: 1px solid #555;
+  border-radius: 4px;
+}
+
+.map-container {
+  height: 400px;
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 1px solid #555;
+}
+/* Add this new style to your existing Dashboard.css file */
+
+.impact-alert {
+  font-weight: bold;
+  color: #f4a261;
+}
+.iucn-status-endangered {
+    background-color: #d00000;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.iucn-status-least-concern {
+    background-color: #2a9d8f;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+.iucn-status-not-evaluated {
+    color: #888;
+}
+/* Style for the new "Verify on NCBI" button */
+.verify-button {
+  background-color: #8338ec; /* A distinct, professional purple */
+  color: white;
+}
+.verify-button:hover {
+  background-color: #712fcc; /* A slightly darker purple for hover */
+}
+
+/* Federated Learning Logs Styles */
+.fl-logs-container {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.fl-logs-container h4 {
+  margin-top: 0;
+  color: #e0e0e0;
+}
+
+.fl-logs {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #0d0d0d;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.fl-log-entry {
+  margin-bottom: 5px;
+  padding: 3px 0;
+  border-bottom: 1px solid #333;
+  color: #b0b0b0;
+}
+
+.fl-log-entry:last-child {
+  border-bottom: none;
+}
+
+.training-button {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  margin: 2px;
+  transition: background-color 0.2s;
+}
+
+.training-button:hover {
+  background-color: #357abd;
+}
+
+.quantum-buttons, .fl-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.quantum-buttons button, .fl-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.quantum-buttons button:hover:not(:disabled), .fl-buttons button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.quantum-buttons button:disabled, .fl-buttons button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.fl-status {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #dee2e6;
+}
+
+.fl-status h4 {
+  margin-top: 0;
+  color: #495057;
+}
+
+.fl-status p {
+  margin: 5px 0;
+  font-size: 14px;
+}

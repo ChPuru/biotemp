@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules # Prevents local node_modules from overwriting the container's
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/biomapper
+      - PY_ENGINE_URL=http://python-engine:8890
+    depends_on:
+      - python-engine
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80" # Map local port 3000 to the container's port 80
+    volumes:
+      - ./frontend/src:/app/src
+    depends_on:
+      - backend
+      - python-engine
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
+  
+  
+  
+python-engine:
+  build: ./python_engine
+  image: biomapper-python-engine
+  ports:
+    - "8890:8890"
+  volumes:
+    - ./python_engine:/app
+  command: ["py", "fastapi_server.py"]

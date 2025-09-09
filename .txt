@@ -1,0 +1,205 @@
+biomapper-lite-project/
+├── frontend/                 # All your React code lives here
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/       # Reusable UI components (e.g., Chart, Header)
+│   │   │   ├── Dashboard.js
+│   │   │   └── FederatedLearningViz.js
+│   │   ├── translations/     # Your i18n language files
+│   │   │   ├── en.json
+│   │   │   ├── hi.json
+│   │   │   └── ta.json
+│   │   ├── App.js
+│   │   ├── index.js
+│   │   └── i18n.js           # Configuration for the i18n library
+│   ├── package.json
+│   └── README.md
+│
+├── backend/                  # All your Node.js/Express API code lives here
+│   ├── node_modules/
+│   ├── routes/
+│   │   └── analysis.js       # Defines the /api/analyze endpoint
+│   ├── services/
+│   │   └── python_runner.js  # Logic to call the Python scripts
+│   ├── server.js             # The main Express server entry point
+│   ├── package.json
+│   └── .env                  # Environment variables (e.g., PORT)
+│
+├── python_engine/            # Your core Python AI logic (a self-contained package)
+│   ├── biomapper_lite/
+│   │   ├── __init__.py
+│   │   └── core/
+│   │       ├── __init__.py
+│   │       ├── classifier.py
+│   │       └── aligner.py
+│   ├── data/
+│   │   └── golden_dataset.fasta
+│   ├── requirements.txt      # Python-specific dependencies
+│   └── setup.py
+│
+└── README.md                 # The main project README
+
+
+
+biomapper-lite-project/
+├── frontend/                 # Your React (TypeScript) User Interface
+│   ├── public/
+│   ├── src/
+│   │   ├── components/       # Reusable UI components
+│   │   ├── translations/     # i18n language files (en, hi, ta, ml, bn)
+│   │   ├── assets/           # For logos, pre-computed images (like XAI plot)
+│   │   ├── App.tsx
+│   │   ├── index.tsx
+│   │   └── i18n.ts
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── backend/                  # Your Node.js/Express API Server
+│   ├── node_modules/
+│   ├── uploads/              # Temporary folder for uploaded files
+│   ├── routes/
+│   │   └── analysis.js       # Defines all API endpoints
+│   ├── services/
+│   │   └── python_runner.js  # Logic to execute the Python scripts
+│   ├── server.js             # Main Express server entry point
+│   └── package.json
+│
+├── python_engine/            # Your self-contained Python AI Engine
+│   ├── models/
+│   │   └── nucleotide_transformer_finetuned/ # Your trained model will live here
+│   ├── biomapper_lite/
+│   │   └── core/
+│   │       ├── classifier.py # The core AI logic
+│   │       └── aligner.py    # The Quantum speed test logic
+│   ├── data/
+│   │   └── golden_dataset.fasta # The small, curated demo dataset
+│   ├── main.py               # The main script called by Node.js for analysis
+│   ├── run_aligner.py        # The script called by Node.js for the speed test
+│   ├── requirements.txt
+│   └── setup.py
+│
+└── README.md                 # The main project README
+
+
+
+
+biomapper-lite-project/
+├── frontend/                 # Your React (TypeScript) User Interface
+│   ├── public/
+│   ├── src/
+│   │   ├── components/       # Reusable UI components
+│   │   │   └── MapComponent.tsx # The new ISRO/MapmyIndia map
+│   │   ├── translations/     # i18n language files
+│   │   ├── assets/           # Logos, pre-computed images
+│   │   ├── App.tsx
+│   │   ├── index.tsx
+│   │   └── i18n.ts
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── backend/                  # Your Node.js/Express API Server
+│   ├── uploads/
+│   ├── routes/
+│   │   └── analysis.js       # Defines all API endpoints
+│   ├── services/
+│   │   ├── python_runner.js  # Logic to execute Python scripts
+│   │   └── geo_services.js   # NEW: Logic for MapmyIndia API calls
+│   ├── server.js
+│   ├── package.json
+│   └── .env                  # Will now store API keys
+│
+├── python_engine/            # Your self-contained Python AI Engine
+│   ├── models/
+│   ├── biomapper_lite/
+│   ├── data/
+│   ├── main.py
+│   ├── run_aligner.py
+│   ├── requirements.txt
+│   └── setup.py
+│
+└── README.md
+
+
+biomapper-lite-project/
+├── frontend/
+│   └── src/
+│       └── components/
+│           └── PhylogeneticTree.tsx  # NEW: The tree visualizer
+├── backend/
+│   └── services/
+│       ├── xai_service.js            # NEW: Service for live XAI
+│       ├── quantum_service.js        # NEW: Service for live IBMQ calls
+│       └── blockchain_service.js     # NEW: Real Hyperledger integration
+├── python_engine/
+│   ├── biomapper_lite/
+│   │   └── core/
+│   │       ├── classifier_real.py    # The real, live classifier
+│   │       ├── novelty_real.py       # The real, live novelty engine
+│   │       ├── abundance_estimator.py # NEW: The abundance model
+│   │       └── aligner.py
+│   ├── main_ensemble.py              # NEW: The orchestrator for the live ensemble
+│   └── run_aligner.py
+├── federated_learning/               # NEW: The full FL simulation
+│   ├── server.py
+│   └── client.py
+└── README.md
+
+
+
+biomapper-lite-project/
+├── frontend/
+│   └── src/
+│       └── components/
+│           └── PhylogeneticTree.tsx      # NEW: The tree visualizer
+├── backend/
+│   └── services/
+│       ├── xai_service.js                # NEW: Service for live XAI
+│       ├── quantum_service.js            # NEW: Service for live IBMQ calls
+│       └── blockchain_service.js         # NEW: Real in-memory blockchain
+├── python_engine/
+│   ├── biomapper_lite/
+│   │   └── core/
+│   │       ├── abundance_estimator.py    # NEW: The abundance model
+│   │       ├── classifier_real.py        # The real, live classifier
+│   │       ├── novelty_real.py           # The real, live novelty engine
+│   │       └── aligner.py
+│   ├── federated_learning/               # NEW: The full FL simulation
+│   │   ├── server.py
+│   │   └── client.py
+│   ├── main_ensemble.py                  # NEW: The orchestrator for the live ensemble
+│   └── run_xai.py                        # NEW: Script for live XAI
+└── README.md
+
+
+biomapper-lite-project/
+├── frontend/
+│   └── src/
+│       ├── components/
+│       │   ├── PhylogeneticTree.tsx      # NEW: The live tree visualizer
+│       │   ├── AdminDashboard.tsx        # NEW: For the self-improving model
+│       │   └── BioMarket.tsx             # NEW: For the marketplace concept
+│       └── pages/                        # NEW: For better routing
+│           ├── AnalysisPage.tsx
+│           ├── AdminPage.tsx
+│           └── MarketPage.tsx
+├── backend/
+│   └── services/
+│       ├── xai_service.js                # NEW: Service for live XAI
+│       ├── quantum_service.js            # NEW: Service for live IBMQ calls
+│       └── blockchain_service.js         # NEW: Real in-memory blockchain
+├── python_engine/
+│   ├── models/
+│   │   ├── nucleotide_transformer_finetuned/ # Your primary model
+│   │   └── dnabert2_finetuned/               # Your NEW ensemble model
+│   ├── biomapper_lite/
+│   │   └── core/
+│   │       ├── abundance_estimator.py    # NEW: The abundance model
+│   │       └── ... (other core files)
+│   ├── federated_learning/               # The full FL simulation
+│   │   ├── server.py
+│   │   └── client.py
+│   ├── main_ensemble.py                  # The orchestrator for the live ensemble
+│   ├── run_xai.py                        # Script for live XAI
+│   └── run_quantum.py                    # Script for live Quantum job
+└── README.md
