@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Climate Integration Service for IPCC Climate Models and Biodiversity Impact Assessment
 class ClimateIntegrationService {
@@ -971,7 +971,7 @@ class ClimateIntegrationService {
 const climateIntegrationService = new ClimateIntegrationService();
 
 // Routes
-router.get('/scenarios', auth, async (req, res) => {
+router.get('/scenarios', verifyToken, async (req, res) => {
     try {
         res.json({
             scenarios: climateIntegrationService.getAvailableScenarios(),
@@ -983,7 +983,7 @@ router.get('/scenarios', auth, async (req, res) => {
     }
 });
 
-router.get('/models', auth, async (req, res) => {
+router.get('/models', verifyToken, async (req, res) => {
     try {
         res.json({
             models: climateIntegrationService.getAvailableModels(),
@@ -994,7 +994,7 @@ router.get('/models', auth, async (req, res) => {
     }
 });
 
-router.post('/assess', auth, async (req, res) => {
+router.post('/assess', verifyToken, async (req, res) => {
     try {
         const {
             species_data,
@@ -1035,7 +1035,7 @@ router.post('/assess', auth, async (req, res) => {
     }
 });
 
-router.get('/assessment/:assessmentId/status', auth, async (req, res) => {
+router.get('/assessment/:assessmentId/status', verifyToken, async (req, res) => {
     try {
         const { assessmentId } = req.params;
         const status = await climateIntegrationService.getAssessmentStatus(assessmentId);
@@ -1050,7 +1050,7 @@ router.get('/assessment/:assessmentId/status', auth, async (req, res) => {
     }
 });
 
-router.get('/assessment/:assessmentId/results', auth, async (req, res) => {
+router.get('/assessment/:assessmentId/results', verifyToken, async (req, res) => {
     try {
         const { assessmentId } = req.params;
         const status = await climateIntegrationService.getAssessmentStatus(assessmentId);
@@ -1078,7 +1078,7 @@ router.get('/assessment/:assessmentId/results', auth, async (req, res) => {
     }
 });
 
-router.get('/assessments', auth, async (req, res) => {
+router.get('/assessments', verifyToken, async (req, res) => {
     try {
         const assessments = Array.from(climateIntegrationService.activeAssessments.entries()).map(([assessmentId, status]) => ({
             assessmentId,
@@ -1100,7 +1100,7 @@ router.get('/assessments', auth, async (req, res) => {
     }
 });
 
-router.post('/compare-scenarios', auth, async (req, res) => {
+router.post('/compare-scenarios', verifyToken, async (req, res) => {
     try {
         const {
             species_data,

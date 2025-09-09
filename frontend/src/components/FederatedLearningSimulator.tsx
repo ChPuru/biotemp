@@ -46,7 +46,7 @@ const FederatedLearningSimulator: React.FC = () => {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('/api/federated-learning/status');
+      const response = await fetch('http://localhost:5001/api/federated-learning/status');
       const data = await response.json();
       if (data.success) {
         setStatus(data);
@@ -58,7 +58,7 @@ const FederatedLearningSimulator: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch('/api/federated-learning/history');
+      const response = await fetch('http://localhost:5001/api/federated-learning/history');
       const data = await response.json();
       if (data.success) {
         setRounds(data.fl_rounds);
@@ -73,7 +73,7 @@ const FederatedLearningSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/federated-learning/start-server', {
+      const response = await fetch('http://localhost:5001/api/federated-learning/start-server', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const FederatedLearningSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/federated-learning/stop-server', {
+      const response = await fetch('http://localhost:5001/api/federated-learning/stop-server', {
         method: 'POST',
       });
 
@@ -124,7 +124,7 @@ const FederatedLearningSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/federated-learning/start-client', {
+      const response = await fetch('http://localhost:5001/api/federated-learning/start-client', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ const FederatedLearningSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/federated-learning/stop-clients', {
+      const response = await fetch('http://localhost:5001/api/federated-learning/stop-clients', {
         method: 'POST',
       });
 
@@ -174,7 +174,7 @@ const FederatedLearningSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/federated-learning/simulate', {
+      const response = await fetch('http://localhost:5001/api/federated-learning/simulate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -201,7 +201,7 @@ const FederatedLearningSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/federated-learning/reset', {
+      const response = await fetch('http://localhost:5001/api/federated-learning/reset', {
         method: 'POST',
       });
 

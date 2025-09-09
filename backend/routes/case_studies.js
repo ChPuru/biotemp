@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Real-world eDNA Case Studies Service
 class CaseStudiesService {
@@ -525,7 +525,7 @@ class CaseStudiesService {
 const caseStudiesService = new CaseStudiesService();
 
 // Routes
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const caseStudies = await caseStudiesService.getAllCaseStudies();
         res.json({
@@ -540,7 +540,7 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-router.get('/search', auth, async (req, res) => {
+router.get('/search', verifyToken, async (req, res) => {
     try {
         const { q, organization, type, year } = req.query;
         
@@ -568,7 +568,7 @@ router.get('/search', auth, async (req, res) => {
     }
 });
 
-router.get('/policy-impacts', auth, async (req, res) => {
+router.get('/policy-impacts', verifyToken, async (req, res) => {
     try {
         const impacts = await caseStudiesService.getPolicyImpacts();
         res.json({
@@ -580,7 +580,7 @@ router.get('/policy-impacts', auth, async (req, res) => {
     }
 });
 
-router.get('/cost-analysis', auth, async (req, res) => {
+router.get('/cost-analysis', verifyToken, async (req, res) => {
     try {
         const analysis = await caseStudiesService.getCostAnalysisSummary();
         res.json(analysis);
@@ -589,7 +589,7 @@ router.get('/cost-analysis', auth, async (req, res) => {
     }
 });
 
-router.post('/benchmark', auth, async (req, res) => {
+router.post('/benchmark', verifyToken, async (req, res) => {
     try {
         const userStudy = req.body;
         
@@ -606,7 +606,7 @@ router.post('/benchmark', auth, async (req, res) => {
     }
 });
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     try {
         const { id } = req.params;
         const caseStudy = await caseStudiesService.getCaseStudyById(id);

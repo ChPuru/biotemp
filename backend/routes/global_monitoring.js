@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Global Biodiversity Monitoring System
 class GlobalMonitoringService {
@@ -1096,7 +1096,7 @@ class GlobalMonitoringService {
 const globalMonitoringService = new GlobalMonitoringService();
 
 // Routes
-router.get('/networks', auth, async (req, res) => {
+router.get('/networks', verifyToken, async (req, res) => {
     try {
         res.json({
             available_networks: globalMonitoringService.getAvailableNetworks(),
@@ -1108,7 +1108,7 @@ router.get('/networks', auth, async (req, res) => {
     }
 });
 
-router.get('/indicators', auth, async (req, res) => {
+router.get('/indicators', verifyToken, async (req, res) => {
     try {
         res.json({
             indicators: globalMonitoringService.getAvailableIndicators(),
@@ -1119,7 +1119,7 @@ router.get('/indicators', auth, async (req, res) => {
     }
 });
 
-router.post('/network/setup', auth, async (req, res) => {
+router.post('/network/setup', verifyToken, async (req, res) => {
     try {
         const {
             regions = [],
@@ -1151,7 +1151,7 @@ router.post('/network/setup', auth, async (req, res) => {
     }
 });
 
-router.post('/analysis/run', auth, async (req, res) => {
+router.post('/analysis/run', verifyToken, async (req, res) => {
     try {
         const {
             network_id,
@@ -1191,7 +1191,7 @@ router.post('/analysis/run', auth, async (req, res) => {
     }
 });
 
-router.get('/analysis/:analysisId/status', auth, async (req, res) => {
+router.get('/analysis/:analysisId/status', verifyToken, async (req, res) => {
     try {
         const { analysisId } = req.params;
         const status = await globalMonitoringService.getAnalysisStatus(analysisId);
@@ -1206,7 +1206,7 @@ router.get('/analysis/:analysisId/status', auth, async (req, res) => {
     }
 });
 
-router.get('/analysis/:analysisId/results', auth, async (req, res) => {
+router.get('/analysis/:analysisId/results', verifyToken, async (req, res) => {
     try {
         const { analysisId } = req.params;
         const status = await globalMonitoringService.getAnalysisStatus(analysisId);
@@ -1234,7 +1234,7 @@ router.get('/analysis/:analysisId/results', auth, async (req, res) => {
     }
 });
 
-router.get('/alerts', auth, async (req, res) => {
+router.get('/alerts', verifyToken, async (req, res) => {
     try {
         const { status = 'active', severity, limit = 50 } = req.query;
 
@@ -1262,7 +1262,7 @@ router.get('/alerts', auth, async (req, res) => {
     }
 });
 
-router.put('/alert/:alertId/status', auth, async (req, res) => {
+router.put('/alert/:alertId/status', verifyToken, async (req, res) => {
     try {
         const { alertId } = req.params;
         const { status } = req.body;
@@ -1294,7 +1294,7 @@ router.put('/alert/:alertId/status', auth, async (req, res) => {
     }
 });
 
-router.get('/networks/active', auth, async (req, res) => {
+router.get('/networks/active', verifyToken, async (req, res) => {
     try {
         const networks = Array.from(globalMonitoringService.activeMonitors.entries()).map(([networkId, config]) => ({
             networkId,
@@ -1314,7 +1314,7 @@ router.get('/networks/active', auth, async (req, res) => {
     }
 });
 
-router.get('/dashboard/summary', auth, async (req, res) => {
+router.get('/dashboard/summary', verifyToken, async (req, res) => {
     try {
         const alerts = await globalMonitoringService.loadExistingAlerts();
         const activeNetworks = Array.from(globalMonitoringService.activeMonitors.values());

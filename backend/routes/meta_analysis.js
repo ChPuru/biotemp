@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Advanced Meta-Analysis Engine for Cross-Study Biodiversity Intelligence
 class MetaAnalysisEngine {
@@ -1017,7 +1017,7 @@ class MetaAnalysisEngine {
 const metaAnalysisEngine = new MetaAnalysisEngine();
 
 // Routes
-router.get('/methodologies', auth, async (req, res) => {
+router.get('/methodologies', verifyToken, async (req, res) => {
     try {
         res.json({
             methodologies: metaAnalysisEngine.getAvailableMethodologies(),
@@ -1029,7 +1029,7 @@ router.get('/methodologies', auth, async (req, res) => {
     }
 });
 
-router.post('/run', auth, async (req, res) => {
+router.post('/run', verifyToken, async (req, res) => {
     try {
         const {
             methodology,
@@ -1074,7 +1074,7 @@ router.post('/run', auth, async (req, res) => {
     }
 });
 
-router.get('/analysis/:analysisId/status', auth, async (req, res) => {
+router.get('/analysis/:analysisId/status', verifyToken, async (req, res) => {
     try {
         const { analysisId } = req.params;
         const status = await metaAnalysisEngine.getAnalysisStatus(analysisId);
@@ -1089,7 +1089,7 @@ router.get('/analysis/:analysisId/status', auth, async (req, res) => {
     }
 });
 
-router.get('/analysis/:analysisId/results', auth, async (req, res) => {
+router.get('/analysis/:analysisId/results', verifyToken, async (req, res) => {
     try {
         const { analysisId } = req.params;
         const status = await metaAnalysisEngine.getAnalysisStatus(analysisId);
@@ -1117,7 +1117,7 @@ router.get('/analysis/:analysisId/results', auth, async (req, res) => {
     }
 });
 
-router.get('/analyses', auth, async (req, res) => {
+router.get('/analyses', verifyToken, async (req, res) => {
     try {
         const analyses = Array.from(metaAnalysisEngine.activeAnalyses.entries()).map(([analysisId, status]) => ({
             analysisId,
@@ -1139,7 +1139,7 @@ router.get('/analyses', auth, async (req, res) => {
     }
 });
 
-router.post('/compare-methodologies', auth, async (req, res) => {
+router.post('/compare-methodologies', verifyToken, async (req, res) => {
     try {
         const { studies_data, methodologies = ['effect_size_meta_analysis', 'network_meta_analysis'] } = req.body;
 
@@ -1257,3 +1257,14 @@ metaAnalysisEngine.calculateMethodologyScore = function(result) {
     score += (1 - heterogeneityPenalty) * 0.3;
 
     // Statistical significance (20%)
+    const pValue = result.synthesis?.p_value || 1;
+    score += (pValue < 0.05 ? 1 : 0) * 0.2;
+
+    // Sample size consideration (10%)
+    const totalSampleSize = result.synthesis?.total_sample_size || 0;
+    score += Math.min(totalSampleSize / 1000, 1) * 0.1;
+
+    return Math.min(score, 1);
+}
+
+module.exports = router;

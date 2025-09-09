@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Advanced Economic Modeling Service for Biodiversity Valuation
 class EconomicModelingService {
@@ -1229,7 +1229,7 @@ class EconomicModelingService {
 const economicModelingService = new EconomicModelingService();
 
 // Routes
-router.get('/methods', auth, async (req, res) => {
+router.get('/methods', verifyToken, async (req, res) => {
     try {
         res.json({
             methods: economicModelingService.getAvailableMethods(),
@@ -1243,7 +1243,7 @@ router.get('/methods', auth, async (req, res) => {
     }
 });
 
-router.post('/valuate', auth, async (req, res) => {
+router.post('/valuate', verifyToken, async (req, res) => {
     try {
         const {
             biodiversity_assets,
@@ -1280,4 +1280,11 @@ router.post('/valuate', auth, async (req, res) => {
             message: 'Economic valuation started',
             valuation_methods,
             time_horizon,
-            currency,
+            currency
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+module.exports = router;

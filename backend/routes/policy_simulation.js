@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Advanced Policy Simulation Service with Monte Carlo Modeling
 class PolicySimulationService {
@@ -660,7 +660,7 @@ class PolicySimulationService {
 const policySimulationService = new PolicySimulationService();
 
 // Routes
-router.get('/frameworks', auth, async (req, res) => {
+router.get('/frameworks', verifyToken, async (req, res) => {
     try {
         res.json({
             frameworks: policySimulationService.getAvailableFrameworks(),
@@ -672,7 +672,7 @@ router.get('/frameworks', auth, async (req, res) => {
     }
 });
 
-router.post('/run', auth, async (req, res) => {
+router.post('/run', verifyToken, async (req, res) => {
     try {
         const {
             policy_framework,
@@ -715,7 +715,7 @@ router.post('/run', auth, async (req, res) => {
     }
 });
 
-router.get('/simulation/:simulationId/status', auth, async (req, res) => {
+router.get('/simulation/:simulationId/status', verifyToken, async (req, res) => {
     try {
         const { simulationId } = req.params;
         const status = await policySimulationService.getSimulationStatus(simulationId);
@@ -730,7 +730,7 @@ router.get('/simulation/:simulationId/status', auth, async (req, res) => {
     }
 });
 
-router.get('/simulation/:simulationId/results', auth, async (req, res) => {
+router.get('/simulation/:simulationId/results', verifyToken, async (req, res) => {
     try {
         const { simulationId } = req.params;
         const status = await policySimulationService.getSimulationStatus(simulationId);
@@ -760,7 +760,7 @@ router.get('/simulation/:simulationId/results', auth, async (req, res) => {
     }
 });
 
-router.get('/simulations', auth, async (req, res) => {
+router.get('/simulations', verifyToken, async (req, res) => {
     try {
         const simulations = Array.from(policySimulationService.activeSimulations.entries()).map(([simulationId, status]) => ({
             simulationId,
@@ -781,7 +781,7 @@ router.get('/simulations', auth, async (req, res) => {
     }
 });
 
-router.post('/scenario-analysis', auth, async (req, res) => {
+router.post('/scenario-analysis', verifyToken, async (req, res) => {
     try {
         const { policy_framework, scenarios, baseline_data, time_horizon = 20 } = req.body;
 
@@ -830,7 +830,7 @@ router.post('/scenario-analysis', auth, async (req, res) => {
     }
 });
 
-router.post('/sensitivity-analysis', auth, async (req, res) => {
+router.post('/sensitivity-analysis', verifyToken, async (req, res) => {
     try {
         const { policy_framework, baseline_data, parameter_ranges, time_horizon = 20 } = req.body;
 

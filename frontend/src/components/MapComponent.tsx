@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, Circle } from 'react-leaflet';
 import { LatLngExpression, DivIcon } from 'leaflet';
 import axios from 'axios';
+import './MapComponent.css';
 
 interface eDNASample {
     id: string;
@@ -24,21 +25,11 @@ interface MapComponentProps {
 
 // Custom marker icons for different conservation statuses
 const getMarkerIcon = (iucnStatus: string) => {
-    const colors = {
-        'Critically Endangered': '#FF0000',
-        'Endangered': '#FF6600',
-        'Vulnerable': '#FFCC00',
-        'Near Threatened': '#99CC00',
-        'Least Concern': '#00CC00',
-        'Data Deficient': '#999999',
-        'Not Evaluated': '#CCCCCC'
-    };
-    
-    const color = colors[iucnStatus as keyof typeof colors] || '#CCCCCC';
+    const statusClass = iucnStatus.toLowerCase().replace(/\s/g, '-');
     
     return new DivIcon({
-        html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-        className: 'custom-marker',
+        html: `<div class="custom-marker ${statusClass}"></div>`,
+        className: 'custom-marker-wrapper',
         iconSize: [20, 20],
         iconAnchor: [10, 10]
     });
@@ -112,7 +103,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ position, address, analysis
     };
     
     return (
-        <div className="map-container" style={{ position: 'relative', height: '500px', width: '100%' }}>
+        <div className="map-container">
             <MapContainer 
                 center={position} 
                 zoom={7} 
@@ -121,14 +112,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ position, address, analysis
                 ref={mapRef}
             >
                 <LayersControl position="topright">
-                    <LayersControl.BaseLayer checked name="OpenStreetMap">
+                    <LayersControl.BaseLayer checked name="Dark Map">
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                     </LayersControl.BaseLayer>
                     
-                    <LayersControl.BaseLayer name="Satellite">
+                    <LayersControl.BaseLayer name="Dark Satellite">
                         <TileLayer
                             attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
                             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
@@ -160,14 +151,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ position, address, analysis
                                             <p><strong>Timestamp:</strong> {new Date(sample.timestamp).toLocaleString()}</p>
                                             <button 
                                                 onClick={() => verifyBlockchainIntegrity(sample)}
-                                                style={{ 
-                                                    background: '#007cba', 
-                                                    color: 'white', 
-                                                    border: 'none', 
-                                                    padding: '5px 10px',
-                                                    borderRadius: '3px',
-                                                    cursor: 'pointer'
-                                                }}
+                                                className="verify-blockchain-btn"
                                             >
                                                 🔗 Verify Blockchain
                                             </button>
@@ -205,24 +189,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ position, address, analysis
             </MapContainer>
             
             {/* Real-time statistics overlay */}
-            <div style={{
-                position: 'absolute',
-                top: '10px',
-                left: '10px',
-                background: 'rgba(255, 255, 255, 0.9)',
-                padding: '10px',
-                borderRadius: '5px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                zIndex: 1000
-            }}>
+            <div className="map-stats-overlay">
                 <h4>🌍 Live Biodiversity Monitor</h4>
-                <p>Total Samples: {eDNASamples.length}</p>
-                <p>Endangered Species: {eDNASamples.filter(s => 
+                <p>Total Samples: <span className="stat-highlight">{eDNASamples.length}</span></p>
+                <p>Endangered Species: <span className="stat-highlight">{eDNASamples.filter(s => 
                     s.iucnStatus === 'Critically Endangered' || s.iucnStatus === 'Endangered'
-                ).length}</p>
-                <p>Avg Biodiversity: {eDNASamples.length > 0 ? 
+                ).length}</span></p>
+                <p>Avg Biodiversity: <span className="stat-highlight">{eDNASamples.length > 0 ? 
                     (eDNASamples.reduce((acc, s) => acc + s.biodiversityIndex, 0) / eDNASamples.length).toFixed(2) : '0'
-                }</p>
+                }</span></p>
             </div>
         </div>
     );

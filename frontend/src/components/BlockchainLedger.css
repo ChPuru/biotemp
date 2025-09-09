@@ -1,0 +1,374 @@
+/* Blockchain Ledger Timeline Visualization */
+
+.blockchain-ledger {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.blockchain-ledger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-teal));
+  border-radius: 12px 12px 0 0;
+}
+
+.ledger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ledger-header h3 {
+  margin: 0;
+  color: var(--text-heading);
+  font-size: 1.3em;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.ledger-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: var(--text-body);
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.8em;
+  font-weight: 500;
+  transition: all 200ms ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background: var(--accent-primary);
+  color: #000;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 8px rgba(0, 170, 255, 0.4);
+}
+
+.ledger-timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.ledger-entry {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.ledger-entry:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.ledger-entry.selected {
+  background: rgba(0, 170, 255, 0.08);
+  border-color: rgba(0, 170, 255, 0.2);
+  transform: translateX(4px);
+}
+
+.entry-connector {
+  position: relative;
+  margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.entry-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.entry-line {
+  width: 2px;
+  height: 40px;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  margin-top: 8px;
+  opacity: 0.6;
+}
+
+.entry-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.entry-type {
+  font-weight: 600;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.entry-status {
+  font-size: 0.8em;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.entry-description {
+  color: var(--text-body);
+  font-size: 1em;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.entry-meta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.entry-timestamp,
+.entry-hash {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.entry-data {
+  margin-top: 8px;
+}
+
+.data-preview {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.data-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  color: var(--text-body);
+  font-family: 'Fira Code', monospace;
+}
+
+.entry-details {
+  margin-top: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  animation: details-slide-in 300ms ease-out;
+}
+
+@keyframes details-slide-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.entry-details h4 {
+  margin: 0 0 16px 0;
+  color: var(--text-heading);
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-label {
+  color: var(--text-body);
+  font-weight: 500;
+  opacity: 0.8;
+  font-size: 0.9em;
+}
+
+.detail-value {
+  color: var(--text-heading);
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+}
+
+.detail-value.mono {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8em;
+  word-break: break-all;
+}
+
+.data-details h5 {
+  margin: 16px 0 8px 0;
+  color: var(--text-heading);
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.data-json {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 12px;
+  color: var(--text-body);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8em;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ledger-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .ledger-filters {
+    justify-content: center;
+  }
+  
+  .filter-btn {
+    font-size: 0.7em;
+    padding: 4px 8px;
+  }
+  
+  .ledger-timeline {
+    padding-left: 30px;
+  }
+  
+  .entry-dot {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .entry-line {
+    height: 30px;
+  }
+  
+  .entry-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .entry-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .data-preview {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .detail-value.mono {
+    font-size: 0.7em;
+  }
+}
+
+@media (max-width: 480px) {
+  .blockchain-ledger {
+    padding: 16px;
+  }
+  
+  .ledger-timeline {
+    padding-left: 20px;
+  }
+  
+  .entry-dot {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+  
+  .entry-line {
+    height: 20px;
+  }
+  
+  .ledger-entry {
+    padding: 12px;
+  }
+  
+  .entry-details {
+    padding: 16px;
+  }
+}

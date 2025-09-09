@@ -2,16 +2,16 @@
 const mongoose = require('mongoose');
 
 const AnnotationSchema = new mongoose.Schema({
-  sequenceId: { type: String, required: true, index: true },
-  originalPrediction: { type: String, required: true },
-  userFeedback: { type: String, enum: ['Confirmed', 'Flagged'], required: true },
+  sequenceId: { type: String, default: 'demo-sequence', index: true },
+  originalPrediction: { type: String, default: 'Unknown species' },
+  userFeedback: { type: String, enum: ['Confirmed', 'Flagged'], default: 'Confirmed' },
   correctedSpecies: { type: String }, // Only if flagged and corrected
   scientistId: { type: String, required: true, index: true }, // In a real app, this would be a user reference
   timestamp: { type: Date, default: Date.now, index: true },
   // New fields for collaborative features
   position: {
-    start: Number,
-    end: Number
+    start: { type: Number, default: 0 },
+    end: { type: Number, default: 0 }
   },
   roomId: { type: String, index: true }, // For collaborative sessions
   collaborativeNote: { type: String }, // Notes added during collaboration

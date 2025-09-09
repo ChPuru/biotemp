@@ -1,0 +1,184 @@
+/* Dark Map Theme for BioMapper */
+.map-container {
+  position: relative;
+  height: 500px;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Dark map tiles override */
+.leaflet-container {
+  background: #0D1B2A !important;
+}
+
+.leaflet-tile {
+  filter: brightness(0.6) contrast(1.2) hue-rotate(200deg) saturate(0.8);
+}
+
+/* Custom glowing markers */
+.custom-marker {
+  background: var(--accent-primary) !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.8), 0 0 24px rgba(0, 170, 255, 0.4) !important;
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+
+.custom-marker.critically-endangered {
+  background: #e76f51 !important;
+  box-shadow: 0 0 12px rgba(231, 111, 81, 0.8), 0 0 24px rgba(231, 111, 81, 0.4) !important;
+}
+
+.custom-marker.endangered {
+  background: #f4a261 !important;
+  box-shadow: 0 0 12px rgba(244, 162, 97, 0.8), 0 0 24px rgba(244, 162, 97, 0.4) !important;
+}
+
+.custom-marker.vulnerable {
+  background: #2a9d8f !important;
+  box-shadow: 0 0 12px rgba(42, 157, 143, 0.8), 0 0 24px rgba(42, 157, 143, 0.4) !important;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+/* Dark popup styling */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-secondary) !important;
+  color: var(--text-body) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-secondary) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.edna-popup {
+  color: var(--text-body);
+  font-family: 'Inter', sans-serif;
+}
+
+.edna-popup h4 {
+  color: var(--text-heading);
+  margin: 0 0 12px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.edna-popup p {
+  margin: 8px 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.edna-popup button {
+  background: var(--accent-primary);
+  color: #000;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: all 200ms ease;
+  box-shadow: 0 0 8px rgba(0, 170, 255, 0.4);
+}
+
+.edna-popup button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.6);
+}
+
+.verify-blockchain-btn {
+  background: var(--accent-primary);
+  color: #000;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+  transition: all 200ms ease;
+  box-shadow: 0 0 8px rgba(0, 170, 255, 0.4);
+}
+
+.verify-blockchain-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.6);
+}
+
+/* Status indicators */
+.status-critically-endangered { color: #e76f51; font-weight: 600; }
+.status-endangered { color: #f4a261; font-weight: 600; }
+.status-vulnerable { color: #2a9d8f; font-weight: 600; }
+.status-near-threatened { color: #99CC00; font-weight: 600; }
+.status-least-concern { color: #00CC00; font-weight: 600; }
+
+/* Live statistics overlay */
+.map-stats-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--bg-secondary);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.map-stats-overlay h4 {
+  color: var(--text-heading);
+  margin: 0 0 12px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.map-stats-overlay p {
+  margin: 6px 0;
+  font-size: 0.9em;
+  color: var(--text-body);
+}
+
+.map-stats-overlay .stat-highlight {
+  color: var(--accent-secondary);
+  font-weight: 600;
+}
+
+/* Dark controls */
+.leaflet-control-layers {
+  background: var(--bg-secondary) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.leaflet-control-layers label {
+  color: var(--text-body) !important;
+}
+
+.leaflet-control-zoom {
+  background: var(--bg-secondary) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--bg-secondary) !important;
+  color: var(--text-body) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: var(--text-heading) !important;
+}

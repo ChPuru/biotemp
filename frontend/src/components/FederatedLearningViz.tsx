@@ -25,6 +25,14 @@ const FederatedLearningViz: React.FC = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [isSimulating, setIsSimulating] = useState(false);
+    const [metrics] = useState({
+        globalAccuracy: 0.87,
+        localAccuracy: 0.92,
+        trainingRounds: 15,
+        activeClients: 2,
+        dataPoints: 1250,
+        convergenceRate: 0.94
+    });
 
     const onConnect = useCallback((params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
@@ -57,7 +65,45 @@ const FederatedLearningViz: React.FC = () => {
     };
 
     return (
-        <>
+        <div className="fl-container">
+            <h3 style={{ color: 'var(--text-heading)', marginBottom: '20px', fontSize: '1.3em', fontWeight: '600' }}>
+                🧠 Federated Learning Network
+            </h3>
+            
+            {/* Live Metrics Panel */}
+            <div className="fl-metrics-panel">
+                <div className="fl-metric-card">
+                    <div className="fl-metric-label">Global Accuracy</div>
+                    <div className="fl-metric-value cyan">{(metrics.globalAccuracy * 100).toFixed(1)}%</div>
+                    <div className="fl-progress">
+                        <div className="fl-progress-bar" style={{ width: `${metrics.globalAccuracy * 100}%` }}></div>
+                    </div>
+                </div>
+                <div className="fl-metric-card">
+                    <div className="fl-metric-label">Local Accuracy</div>
+                    <div className="fl-metric-value amber">{(metrics.localAccuracy * 100).toFixed(1)}%</div>
+                    <div className="fl-progress">
+                        <div className="fl-progress-bar" style={{ width: `${metrics.localAccuracy * 100}%` }}></div>
+                    </div>
+                </div>
+                <div className="fl-metric-card">
+                    <div className="fl-metric-label">Training Rounds</div>
+                    <div className="fl-metric-value">{metrics.trainingRounds}</div>
+                </div>
+                <div className="fl-metric-card">
+                    <div className="fl-metric-label">Active Clients</div>
+                    <div className="fl-metric-value cyan">{metrics.activeClients}</div>
+                </div>
+                <div className="fl-metric-card">
+                    <div className="fl-metric-label">Data Points</div>
+                    <div className="fl-metric-value">{metrics.dataPoints.toLocaleString()}</div>
+                </div>
+                <div className="fl-metric-card">
+                    <div className="fl-metric-label">Convergence</div>
+                    <div className="fl-metric-value amber">{(metrics.convergenceRate * 100).toFixed(1)}%</div>
+                </div>
+            </div>
+
             <div className="reactflow-wrapper">
                 <ReactFlow
                     nodes={nodes}
@@ -72,10 +118,11 @@ const FederatedLearningViz: React.FC = () => {
                     <Background />
                 </ReactFlow>
             </div>
+            
             <button onClick={runSimulation} disabled={isSimulating} className="simulation-button">
-                {isSimulating ? "Simulating..." : t('federated_learning_button')}
+                {isSimulating ? "🔄 Simulating..." : "🚀 " + t('federated_learning_button')}
             </button>
-        </>
+        </div>
     );
 };
 

@@ -114,7 +114,29 @@ io.on('connection', (socket) => {
       timestamp: new Date()
     });
   });
-  
+
+  // Handle chat messages
+  socket.on('chat-message', (data) => {
+    console.log('Chat message received:', data);
+    socket.to(data.roomId).emit('chat-message', {
+      id: data.id,
+      userId: data.userId,
+      username: data.username,
+      message: data.message,
+      timestamp: data.timestamp || new Date().toISOString()
+    });
+  });
+
+  // Handle user joining chat
+  socket.on('user-joined-chat', (data) => {
+    console.log('User joined chat:', data);
+    socket.to(data.roomId).emit('user-joined-chat', {
+      userId: data.userId,
+      username: data.username,
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);

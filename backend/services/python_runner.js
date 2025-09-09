@@ -140,26 +140,30 @@ async function runPythonPhyloTree(filePath) { // NEW
 function startFLSimulation() {
     return new Promise((resolve, reject) => {
         console.log("\n--- 🤖 Live Federated Learning Simulation Started ---");
-        
+
         // Fallback simulation with mock data if Python server fails
         const simulationLogs = [];
         let useSimulation = false;
-        
+        let flServer = null;
+        let clientsCompleted = 0;
+        let totalClients = 2;
+        const clientPath = path.join(__dirname, '../../python_engine/federated_learning/fl_client.py');
+
         // Try to start Python server first
         const serverPath = path.join(__dirname, '../../python_engine/federated_learning/fl_server.py');
-        
+
         try {
-            const flServer = spawn('py', [serverPath], {
+            flServer = spawn('py', [serverPath], {
                 cwd: path.join(__dirname, '../../python_engine/federated_learning')
             });
-            
+
             let serverTimeout = setTimeout(() => {
                 console.log('FL Server timeout, using simulation fallback');
-                flServer.kill();
+                if (flServer) flServer.kill();
                 useSimulation = true;
                 startMockSimulation();
             }, 5000);
-            
+
             flServer.stdout.on('data', (data) => {
                 const log = `[FL Server]: ${data.toString().trim()}`;
                 console.log(log);
@@ -169,20 +173,20 @@ function startFLSimulation() {
                     setTimeout(startClients, 2000);
                 }
             });
-            
+
             flServer.stderr.on('data', (data) => {
                 const log = `[FL Server ERR]: ${data.toString().trim()}`;
                 console.error(log);
                 simulationLogs.push(log);
             });
-            
+
             flServer.on('error', (error) => {
                 console.log('FL Server failed to start, using simulation fallback');
                 clearTimeout(serverTimeout);
                 useSimulation = true;
                 startMockSimulation();
             });
-            
+
         } catch (error) {
             console.log('FL Server spawn failed, using simulation fallback');
             useSimulation = true;
@@ -278,9 +282,11 @@ function startFLSimulation() {
             }
         };
 
-        flServer.on('error', (err) => {
-            reject({ status: 'error', error: `Server failed to start: ${err.message}` });
-        });
+        if (flServer) {
+            flServer.on('error', (err) => {
+                reject({ status: 'error', error: `Server failed to start: ${err.message}` });
+            });
+        }
 
         // Timeout after 30 seconds
         setTimeout(() => {
@@ -341,23 +347,194 @@ async function getFLStatus() {
 async function stopFLSimulation() {
   const engineUrl = process.env.PY_ENGINE_URL;
   if (engineUrl) {
-    try { 
-      const res = await axios.post(`${engineUrl}/fl/stop`, {}, { timeout: 30000 }); 
-      return res.data; 
+    try {
+      const res = await axios.post(`${engineUrl}/fl/stop`, {}, { timeout: 30000 });
+      return res.data;
     } catch (e) { /* fall through */ }
   }
-  
+
   return { status: 'stopped' };
 }
 
-module.exports = { 
-  runPythonAnalysis, 
-  runPythonQuantumJob, 
-  runPythonXai, 
-  startFLSimulation, 
-  runPythonPhyloTree, 
+// Generic function to run Python scripts with arguments
+async function runPythonScript(scriptName, args = []) {
+  const options = { ...defaultOptions, args: args };
+  return new Promise((resolve, reject) => {
+    PythonShell.run(scriptName, options)
+      .then(messages => {
+        try {
+          // Try to parse as JSON first
+          const jsonString = messages[messages.length - 1];
+          const jsonResult = JSON.parse(jsonString);
+          resolve(jsonResult);
+        } catch (e) {
+          // If not JSON, return the raw messages
+          resolve({
+            status: 'success',
+            data: messages.join('\n'),
+            raw_output: messages
+          });
+        }
+      })
+      .catch(err => {
+        reject({
+          status: 'error',
+          error: err.message,
+          script: scriptName,
+          args: args
+        });
+      });
+  });
+}
+
+// Advanced integration functions
+async function runPythonMicrobiome(filePath) {
+  const options = { ...defaultOptions, args: [filePath] };
+  return new Promise((resolve, reject) => {
+    PythonShell.run('run_microbiome.py', options)
+      .then(messages => {
+        try {
+          const result = JSON.parse(messages.join(''));
+          resolve(result);
+        } catch (e) {
+          resolve({
+            status: 'success',
+            data: messages.join('\n'),
+            raw_output: messages
+          });
+        }
+      })
+      .catch(err => {
+        reject({
+          status: 'error',
+          error: err.message,
+          script: 'run_microbiome.py'
+        });
+      });
+  });
+}
+
+async function runPythonBionemo(sequence, modelType = 'esmfold') {
+  const options = { ...defaultOptions, args: [sequence, modelType] };
+  return new Promise((resolve, reject) => {
+    PythonShell.run('run_bionemo.py', options)
+      .then(messages => {
+        try {
+          const result = JSON.parse(messages.join(''));
+          resolve(result);
+        } catch (e) {
+          resolve({
+            status: 'success',
+            data: messages.join('\n'),
+            raw_output: messages
+          });
+        }
+      })
+      .catch(err => {
+        reject({
+          status: 'error',
+          error: err.message,
+          script: 'run_bionemo.py'
+        });
+      });
+  });
+}
+
+async function runPythonParabricks(filePath) {
+  const options = { ...defaultOptions, args: [filePath] };
+  return new Promise((resolve, reject) => {
+    PythonShell.run('run_parabricks.py', options)
+      .then(messages => {
+        try {
+          const result = JSON.parse(messages.join(''));
+          resolve(result);
+        } catch (e) {
+          resolve({
+            status: 'success',
+            data: messages.join('\n'),
+            raw_output: messages
+          });
+        }
+      })
+      .catch(err => {
+        reject({
+          status: 'error',
+          error: err.message,
+          script: 'run_parabricks.py'
+        });
+      });
+  });
+}
+
+// Quantum sequence analysis function
+async function runQuantumSequenceAnalysis(filePath) {
+  const options = { ...defaultOptions, args: [filePath] };
+  return new Promise((resolve, reject) => {
+    PythonShell.run('quantum_sequence_analysis.py', options)
+      .then(messages => {
+        try {
+          const result = JSON.parse(messages.join(''));
+          resolve(result);
+        } catch (e) {
+          resolve({
+            status: 'success',
+            data: messages.join('\n'),
+            raw_output: messages,
+            note: 'Quantum sequence analysis completed with fallback'
+          });
+        }
+      })
+      .catch(err => {
+        reject({
+          status: 'error',
+          error: err.message,
+          script: 'quantum_sequence_analysis.py'
+        });
+      });
+  });
+}
+
+// Advanced integration functions
+async function runPythonSequenceAnalysis(filePath) {
+  const options = { ...defaultOptions, args: [filePath] };
+  return new Promise((resolve, reject) => {
+    PythonShell.run('run_sequence_analysis.py', options)
+      .then(messages => {
+        try {
+          const result = JSON.parse(messages.join(''));
+          resolve(result);
+        } catch (e) {
+          resolve({
+            status: 'success',
+            data: messages.join('\n'),
+            raw_output: messages
+          });
+        }
+      })
+      .catch(err => {
+        reject({
+          status: 'error',
+          error: err.message,
+          script: 'run_sequence_analysis.py'
+        });
+      });
+  });
+}
+
+module.exports = {
+  runPythonAnalysis,
+  runPythonQuantumJob,
+  runPythonXai,
+  startFLSimulation,
+  runPythonPhyloTree,
   runPythonNcbiBlast,
   runPythonFLSimulation,
   getFLStatus,
-  stopFLSimulation
+  stopFLSimulation,
+  runPythonScript,
+  runPythonMicrobiome,
+  runPythonBionemo,
+  runPythonParabricks,
+  runPythonSequenceAnalysis,
+  runQuantumSequenceAnalysis
 };

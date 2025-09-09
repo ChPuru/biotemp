@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './AdvancedFeaturesPanel.css';
 
@@ -51,16 +51,11 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
     const [parabricksJobs, setParabricksJobs] = useState<JobStatus[]>([]);
     const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
     const [costEstimate, setCostEstimate] = useState<CostEstimate | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [benchmarkResults, setBenchmarkResults] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
-    useEffect(() => {
-        loadInitialData();
-        const interval = setInterval(refreshJobStatuses, 5000);
-        return () => clearInterval(interval);
-    }, []);
-
-    const loadInitialData = async () => {
+    const loadInitialData = useCallback(async () => {
         try {
             await Promise.all([
                 loadBlockchainStatus(),
@@ -70,9 +65,9 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
         } catch (error) {
             console.error('Error loading initial data:', error);
         }
-    };
+    }, []);
 
-    const refreshJobStatuses = async () => {
+    const refreshJobStatuses = useCallback(async () => {
         try {
             await Promise.all([
                 loadQiime2Jobs(),
@@ -82,11 +77,17 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
         } catch (error) {
             console.error('Error refreshing job statuses:', error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        loadInitialData();
+        const interval = setInterval(refreshJobStatuses, 5000);
+        return () => clearInterval(interval);
+    }, [loadInitialData, refreshJobStatuses]);
 
     const loadBlockchainStatus = async () => {
         try {
-            const response = await axios.get('/api/blockchain/status');
+            const response = await axios.get('http://localhost:5001/api/blockchain/status');
             setBlockchainStatus(response.data);
         } catch (error) {
             console.error('Error loading blockchain status:', error);
@@ -95,7 +96,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
 
     const loadSecurityStatus = async () => {
         try {
-            const response = await axios.get('/api/security/health');
+            const response = await axios.get('http://localhost:5001/api/security/health');
             setSecurityStatus(response.data);
         } catch (error) {
             console.error('Error loading security status:', error);
@@ -104,7 +105,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
 
     const loadQiime2Jobs = async () => {
         try {
-            const response = await axios.get('/api/qiime2/jobs');
+            const response = await axios.get('http://localhost:5001/api/qiime2/jobs');
             setQiime2Jobs(response.data.jobs || []);
         } catch (error) {
             console.error('Error loading QIIME2 jobs:', error);
@@ -113,7 +114,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
 
     const loadBioNeMoJobs = async () => {
         try {
-            const response = await axios.get('/api/bionemo/jobs');
+            const response = await axios.get('http://localhost:5001/api/bionemo/jobs');
             setBioNeMoJobs(response.data.jobs || []);
         } catch (error) {
             console.error('Error loading BioNeMo jobs:', error);
@@ -122,7 +123,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
 
     const loadParabricksJobs = async () => {
         try {
-            const response = await axios.get('/api/parabricks/jobs');
+            const response = await axios.get('http://localhost:5001/api/parabricks/jobs');
             setParabricksJobs(response.data.jobs || []);
         } catch (error) {
             console.error('Error loading Parabricks jobs:', error);
@@ -131,7 +132,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
 
     const loadCaseStudies = async () => {
         try {
-            const response = await axios.get('/api/case-studies');
+            const response = await axios.get('http://localhost:5001/api/case-studies');
             setCaseStudies(response.data.case_studies || []);
         } catch (error) {
             console.error('Error loading case studies:', error);
@@ -141,7 +142,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
     const runQiime2Analysis = async () => {
         setIsLoading({ ...isLoading, qiime2: true });
         try {
-            const response = await axios.post('/api/qiime2/run', {
+            const response = await axios.post('http://localhost:5001/api/qiime2/run', {
                 inputPath: '/tmp/sample_data',
                 demultiplex: true,
                 trimLeftF: 0,
@@ -171,10 +172,10 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
         setIsLoading({ ...isLoading, bionemo: true });
         try {
             // Get first sequence for demo
-            const firstResult = analysisResults.classification_results[0];
+            // const firstResult = analysisResults.classification_results[0]; // Not used in current implementation
             const mockSequence = 'MKTVRQERLKSIVRILERSKEPVSGAQLAEELSVSRQVIVQDIAYLRSLGYNIVATPRGYVLAGG';
             
-            const response = await axios.post('/api/bionemo/protein/analyze', {
+            const response = await axios.post('http://localhost:5001/api/bionemo/protein/analyze', {
                 sequence: mockSequence,
                 model: 'esm2-650m',
                 tasks: ['embedding', 'secondary_structure', 'contact_prediction']
@@ -192,11 +193,13 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
     const runParabricksAnalysis = async () => {
         setIsLoading({ ...isLoading, parabricks: true });
         try {
-            const response = await axios.post('/api/parabricks/run', {
+            const response = await axios.post('http://localhost:5001/api/parabricks/run', {
                 tool: 'fq2bam',
-                input_files: ['/tmp/sample_1.fastq', '/tmp/sample_2.fastq'],
+                input_files: {
+                    fastq_files: ['/tmp/sample_1.fastq', '/tmp/sample_2.fastq'],
+                    reference_genome: '/tmp/reference.fa'
+                },
                 output_dir: '/tmp/parabricks_output',
-                reference_genome: '/tmp/reference.fa',
                 additional_args: ['--num-gpus', '1']
             });
             alert(`Parabricks analysis started! Job ID: ${response.data.jobId}`);
@@ -212,7 +215,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
     const generateCostEstimate = async () => {
         setIsLoading({ ...isLoading, cost: true });
         try {
-            const response = await axios.post('/api/cost-analysis/estimate', {
+            const response = await axios.post('http://localhost:5001/api/cost-analysis/estimate', {
                 sample_count: 50,
                 reads_per_sample: 100000,
                 sequencing_platform: 'illumina_miseq',
@@ -235,7 +238,7 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
     const runBenchmark = async () => {
         setIsLoading({ ...isLoading, benchmark: true });
         try {
-            const response = await axios.post('/api/benchmarking/run', {
+            const response = await axios.post('http://localhost:5001/api/benchmarking/run', {
                 test_dataset: '/tmp/test_data',
                 pipelines: ['biomapper', 'qiime2-standard', 'nf-core/ampliseq'],
                 metrics: ['accuracy', 'runtime', 'memory_usage'],
@@ -258,17 +261,21 @@ const AdvancedFeaturesPanel: React.FC<AdvancedFeaturesPanelProps> = ({ analysisR
 
         try {
             const firstResult = analysisResults.classification_results[0];
-            const response = await axios.post('/api/blockchain/record-finding', {
-                sequence_id: firstResult.Sequence_ID,
-                species: firstResult.Predicted_Species,
-                confidence: parseFloat(firstResult.Classifier_Confidence),
-                location: { lat: 19.0760, lon: 72.8777 },
-                metadata: {
-                    iucn_status: firstResult.iucn_status,
-                    novelty_score: parseFloat(firstResult.Novelty_Score)
-                }
+            const response = await axios.post('http://localhost:5001/api/blockchain/record', {
+                type: 'species_finding',
+                data: {
+                    sequence_id: firstResult.Sequence_ID,
+                    species: firstResult.Predicted_Species,
+                    confidence: parseFloat(firstResult.Classifier_Confidence),
+                    location: { lat: 19.0760, lon: 72.8777 },
+                    metadata: {
+                        iucn_status: firstResult.iucn_status,
+                        novelty_score: parseFloat(firstResult.Novelty_Score)
+                    }
+                },
+                sessionId: `analysis_${Date.now()}`
             });
-            alert(`Finding recorded on blockchain! Block hash: ${response.data.block.hash}`);
+            alert(`Finding recorded on blockchain! Block hash: ${response.data.blockHash}`);
             await loadBlockchainStatus();
         } catch (error) {
             console.error('Error recording blockchain finding:', error);

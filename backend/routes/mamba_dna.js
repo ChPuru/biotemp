@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 const { runPythonScript } = require('../services/python_runner');
 
 // Mamba DNA Integration Service
@@ -233,7 +233,7 @@ class MambaDNAService {
 const mambaDNAService = new MambaDNAService();
 
 // Routes
-router.get('/status', auth, async (req, res) => {
+router.get('/status', verifyToken, async (req, res) => {
     try {
         res.json({
             service: 'Mamba DNA Integration',
@@ -246,7 +246,7 @@ router.get('/status', auth, async (req, res) => {
     }
 });
 
-router.get('/models', auth, async (req, res) => {
+router.get('/models', verifyToken, async (req, res) => {
     try {
         res.json({
             models: mambaDNAService.getAvailableModels(),
@@ -257,7 +257,7 @@ router.get('/models', auth, async (req, res) => {
     }
 });
 
-router.post('/analyze', auth, async (req, res) => {
+router.post('/analyze', verifyToken, async (req, res) => {
     try {
         const { sequences, model = 'hyenadna', task = 'embedding', options = {} } = req.body;
 
@@ -287,7 +287,7 @@ router.post('/analyze', auth, async (req, res) => {
     }
 });
 
-router.get('/job/:jobId/status', auth, async (req, res) => {
+router.get('/job/:jobId/status', verifyToken, async (req, res) => {
     try {
         const { jobId } = req.params;
         const status = await mambaDNAService.getJobStatus(jobId);
@@ -302,7 +302,7 @@ router.get('/job/:jobId/status', auth, async (req, res) => {
     }
 });
 
-router.get('/job/:jobId/results', auth, async (req, res) => {
+router.get('/job/:jobId/results', verifyToken, async (req, res) => {
     try {
         const { jobId } = req.params;
         const status = await mambaDNAService.getJobStatus(jobId);
@@ -332,7 +332,7 @@ router.get('/job/:jobId/results', auth, async (req, res) => {
     }
 });
 
-router.get('/jobs', auth, async (req, res) => {
+router.get('/jobs', verifyToken, async (req, res) => {
     try {
         const jobs = Array.from(mambaDNAService.activeJobs.entries()).map(([jobId, status]) => ({
             jobId,
@@ -354,7 +354,7 @@ router.get('/jobs', auth, async (req, res) => {
     }
 });
 
-router.post('/compare-models', auth, async (req, res) => {
+router.post('/compare-models', verifyToken, async (req, res) => {
     try {
         const { sequences, models = ['hyenadna', 'caduceus'], task = 'embedding' } = req.body;
 

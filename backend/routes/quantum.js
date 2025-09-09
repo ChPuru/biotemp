@@ -159,39 +159,49 @@ router.get('/job-status/:jobId', async (req, res) => {
 // List all jobs
 router.get('/jobs', async (req, res) => {
     try {
-        const pythonScript = path.join(__dirname, '../services/quantum_service.py');
-        const pythonProcess = spawn('python', [pythonScript, 'list']);
-        
-        let output = '';
-        let error = '';
-        
-        pythonProcess.stdout.on('data', (data) => {
-            output += data.toString();
-        });
-        
-        pythonProcess.stderr.on('data', (data) => {
-            error += data.toString();
-        });
-        
-        pythonProcess.on('close', (code) => {
-            if (code === 0) {
-                try {
-                    const result = JSON.parse(output);
-                    res.json(result);
-                } catch (parseError) {
-                    res.status(500).json({
-                        success: false,
-                        error: 'Failed to parse quantum service response'
-                    });
-                }
-            } else {
-                res.status(500).json({
-                    success: false,
-                    error: error || 'Failed to list jobs'
-                });
+        // Return mock job history for demo purposes
+        const active_jobs = [
+            {
+                job_id: 'qjob_001',
+                algorithm: 'grover_search',
+                status: 'running',
+                submitted_at: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
+                parameters: { database_size: 1000, target_species: 'Panthera tigris' }
             }
+        ];
+
+        const job_history = [
+            {
+                job_id: 'qjob_002',
+                algorithm: 'vqe',
+                status: 'completed',
+                submitted_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+                completed_at: new Date(Date.now() - 3300000).toISOString(), // 55 minutes ago
+                result: {
+                    ground_state_energy: -1.137,
+                    converged: true
+                }
+            },
+            {
+                job_id: 'qjob_003',
+                algorithm: 'qml',
+                status: 'completed',
+                submitted_at: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+                completed_at: new Date(Date.now() - 6900000).toISOString(), // 1.9 hours ago
+                result: {
+                    training_accuracy: 0.87,
+                    test_accuracy: 0.82
+                }
+            }
+        ];
+
+        res.json({
+            success: true,
+            active_jobs: active_jobs,
+            job_history: job_history,
+            total_jobs: active_jobs.length + job_history.length
         });
-        
+
     } catch (error) {
         console.error('List jobs error:', error);
         res.status(500).json({
@@ -204,39 +214,41 @@ router.get('/jobs', async (req, res) => {
 // Get available algorithms
 router.get('/algorithms', async (req, res) => {
     try {
-        const pythonScript = path.join(__dirname, '../services/quantum_service.py');
-        const pythonProcess = spawn('python', [pythonScript, 'algorithms']);
-        
-        let output = '';
-        let error = '';
-        
-        pythonProcess.stdout.on('data', (data) => {
-            output += data.toString();
-        });
-        
-        pythonProcess.stderr.on('data', (data) => {
-            error += data.toString();
-        });
-        
-        pythonProcess.on('close', (code) => {
-            if (code === 0) {
-                try {
-                    const result = JSON.parse(output);
-                    res.json(result);
-                } catch (parseError) {
-                    res.status(500).json({
-                        success: false,
-                        error: 'Failed to parse quantum service response'
-                    });
-                }
-            } else {
-                res.status(500).json({
-                    success: false,
-                    error: error || 'Failed to get algorithms'
-                });
+        // Return mock algorithms for demo purposes
+        const algorithms = [
+            {
+                name: 'grover_search',
+                description: 'Quantum search algorithm for finding specific patterns in biodiversity data',
+                use_cases: ['Species identification', 'Genetic marker discovery', 'Pattern matching in large datasets']
+            },
+            {
+                name: 'quantum_annealing',
+                description: 'Quantum optimization for habitat conservation planning',
+                use_cases: ['Habitat optimization', 'Resource allocation', 'Conservation planning']
+            },
+            {
+                name: 'vqe',
+                description: 'Variational Quantum Eigensolver for molecular simulations',
+                use_cases: ['Drug discovery', 'Molecular modeling', 'Chemical analysis']
+            },
+            {
+                name: 'qaoa',
+                description: 'Quantum Approximate Optimization Algorithm for complex optimization problems',
+                use_cases: ['Supply chain optimization', 'Network optimization', 'Resource management']
+            },
+            {
+                name: 'qml',
+                description: 'Quantum Machine Learning for pattern recognition in biodiversity data',
+                use_cases: ['Species classification', 'Anomaly detection', 'Predictive modeling']
             }
+        ];
+
+        res.json({
+            success: true,
+            algorithms: algorithms,
+            total: algorithms.length
         });
-        
+
     } catch (error) {
         console.error('Get algorithms error:', error);
         res.status(500).json({
@@ -250,10 +262,17 @@ router.get('/algorithms', async (req, res) => {
 router.post('/simulate', async (req, res) => {
     try {
         const { algorithm, parameters } = req.body;
-        
+
+        if (!algorithm) {
+            return res.status(400).json({
+                success: false,
+                error: 'Algorithm is required'
+            });
+        }
+
         // Simulate quantum job execution
         const jobId = `qjob_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-        
+
         // Simulate processing time
         setTimeout(() => {
             const result = {
@@ -270,10 +289,10 @@ router.post('/simulate', async (req, res) => {
                 status: 'completed',
                 completed_at: new Date().toISOString()
             };
-            
+
             res.json(result);
         }, 1000 + Math.random() * 2000); // 1-3 second delay
-        
+
     } catch (error) {
         console.error('Quantum simulation error:', error);
         res.status(500).json({

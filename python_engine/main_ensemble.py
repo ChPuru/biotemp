@@ -227,7 +227,7 @@ def analyze_with_hybrid_strategy(fasta_file_path: str):
     if sequences_for_cloud_ai:
         # Create a temporary FASTA file with only the sequences the AI needs to see
         with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=".fasta") as tmp:
-            SeqIO.write(sequences_for_ai, tmp, "fasta")
+            SeqIO.write(sequences_for_cloud_ai, tmp, "fasta")
             tmp_path = tmp.name
         
         headers = {"ngrok-skip-browser-warning": "true"}
@@ -313,16 +313,26 @@ def analyze_with_fallback_only(fasta_file_path: str):
     return results_df, biodiversity_metrics, corrected_abundance
 
 def main():
-    # Check if file path is provided
+    # Check if file path is provided, use default if not
     if len(sys.argv) < 2:
-        print(json.dumps({
-            "error": "FASTA file path required as argument",
-            "status": "error",
-            "usage": "python main_ensemble.py <fasta_file_path>"
-        }))
-        sys.exit(1)
-    
-    fasta_file = sys.argv[1]
+        # Use default sample file
+        default_fasta = os.path.join(os.path.dirname(__file__), "data", "golden_dataset.fasta")
+        if os.path.exists(default_fasta):
+            fasta_file = default_fasta
+            print(json.dumps({
+                "info": f"No FASTA file provided, using default: {default_fasta}",
+                "status": "info"
+            }))
+        else:
+            print(json.dumps({
+                "error": "FASTA file path required as argument and no default file found",
+                "status": "error",
+                "usage": "python main_ensemble.py <fasta_file_path>",
+                "default_expected": default_fasta
+            }))
+            sys.exit(1)
+    else:
+        fasta_file = sys.argv[1]
     
     # Check if file exists
     if not os.path.exists(fasta_file):

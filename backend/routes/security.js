@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
 const rateLimit = require('express-rate-limit');
-const auth = require('../middleware/auth');
+const { verifyToken } = require('../middleware/auth');
 
 // Enhanced Cybersecurity Service
 class CybersecurityService {
@@ -313,7 +313,7 @@ const securityRateLimit = rateLimit({
 // Routes
 router.use(securityRateLimit);
 
-router.get('/health', auth, async (req, res) => {
+router.get('/health', async (req, res) => {
     try {
         const health = await securityService.getSecurityHealth();
         res.json(health);
@@ -322,7 +322,7 @@ router.get('/health', auth, async (req, res) => {
     }
 });
 
-router.get('/events', auth, async (req, res) => {
+router.get('/events', verifyToken, async (req, res) => {
     try {
         const { hours = 24, severity, type } = req.query;
         let events = await securityService.getRecentSecurityEvents(parseInt(hours));
@@ -345,7 +345,7 @@ router.get('/events', auth, async (req, res) => {
     }
 });
 
-router.post('/events', auth, async (req, res) => {
+router.post('/events', verifyToken, async (req, res) => {
     try {
         const { type, description, ip, userId, metadata } = req.body;
         
@@ -369,7 +369,7 @@ router.post('/events', auth, async (req, res) => {
     }
 });
 
-router.post('/scan/text', auth, async (req, res) => {
+router.post('/scan/text', verifyToken, async (req, res) => {
     try {
         const { text, context } = req.body;
         
@@ -399,7 +399,7 @@ router.post('/scan/text', auth, async (req, res) => {
     }
 });
 
-router.post('/scan/file', auth, async (req, res) => {
+router.post('/scan/file', verifyToken, async (req, res) => {
     try {
         const { filePath, originalName } = req.body;
         
@@ -429,7 +429,7 @@ router.post('/scan/file', auth, async (req, res) => {
     }
 });
 
-router.get('/audit', auth, async (req, res) => {
+router.get('/audit', verifyToken, async (req, res) => {
     try {
         const { startDate, endDate, userId, ip } = req.query;
         const events = await securityService.getRecentSecurityEvents(24 * 7); // Last week

@@ -1,570 +1,581 @@
 // backend/services/enhanced_fl_service.js
-// Enhanced Federated Learning Service with Real Flower Integration and Simulations
+// Enhanced Federated Learning with Real-time Collaboration
 
-const { PythonShell } = require('python-shell');
-const path = require('path');
-const crypto = require('crypto');
-const fs = require('fs').promises;
 const WebSocket = require('ws');
+const { spawn } = require('child_process');
+const path = require('path');
+const fs = require('fs').promises;
 
 class EnhancedFLService {
     constructor() {
-        this.flServer = null;
-        this.flClients = new Map();
-        this.activeRounds = new Map();
-        this.roundHistory = [];
-        this.clientData = new Map();
-        this.serverConfig = {
-            host: 'localhost',
-            port: 8765,
-            min_clients: 2,
-            max_clients: 10,
-            rounds: 5,
-            timeout: 300000 // 5 minutes
-        };
-
-        this.algorithms = {
-            'fedavg': {
-                name: 'Federated Averaging (FedAvg)',
-                description: 'Standard federated learning algorithm',
-                communication_efficiency: 'high',
-                convergence_speed: 'medium',
-                privacy_level: 'medium'
-            },
-            'fedprox': {
-                name: 'FedProx',
-                description: 'Federated learning with proximal term for heterogeneity',
-                communication_efficiency: 'medium',
-                convergence_speed: 'medium',
-                privacy_level: 'medium'
-            },
-            'fednova': {
-                name: 'FedNova',
-                description: 'Normalized averaging for fair federated learning',
-                communication_efficiency: 'medium',
-                convergence_speed: 'high',
-                privacy_level: 'medium'
-            },
-            'scaffold': {
-                name: 'SCAFFOLD',
-                description: 'Stochastic Controlled Averaging for Federated Learning',
-                communication_efficiency: 'low',
-                convergence_speed: 'high',
-                privacy_level: 'high'
-            },
-            'fedadam': {
-                name: 'FedAdam',
-                description: 'Adaptive federated optimization using Adam',
-                communication_efficiency: 'medium',
-                convergence_speed: 'high',
-                privacy_level: 'medium'
-            }
-        };
-
-        this.privacyTechniques = {
-            'differential_privacy': {
-                name: 'Differential Privacy',
-                description: 'Add noise to protect individual privacy',
-                privacy_level: 'high',
-                utility_impact: 'low'
-            },
-            'secure_aggregation': {
-                name: 'Secure Aggregation',
-                description: 'Cryptographically secure model aggregation',
-                privacy_level: 'very_high',
-                utility_impact: 'none'
-            },
-            'homomorphic_encryption': {
-                name: 'Homomorphic Encryption',
-                description: 'Encrypted computation on model updates',
-                privacy_level: 'very_high',
-                utility_impact: 'medium'
-            }
-        };
-
-        this.initializeFLService();
+        this.activeSessions = new Map();
+        this.participants = new Map();
+        this.models = new Map();
+        this.collaborationRooms = new Map();
+        this.wss = null;
     }
 
-    async initializeFLService() {
-        try {
-            // Create FL data directories
-            await fs.mkdir(path.join(__dirname, '../fl_data'), { recursive: true });
-            await fs.mkdir(path.join(__dirname, '../fl_models'), { recursive: true });
-            console.log('✅ Enhanced FL Service initialized');
-        } catch (error) {
-            console.error('❌ FL service initialization error:', error);
-        }
-    }
+    // Initialize WebSocket server for real-time collaboration
+    initializeWebSocketServer(server) {
+        this.wss = new WebSocket.Server({ server });
 
-    // Start federated learning server
-    async startFLServer(config = {}) {
-        try {
-            const serverConfig = { ...this.serverConfig, ...config };
-            const serverId = `fl_server_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+        this.wss.on('connection', (ws, req) => {
+            const userId = this.extractUserId(req);
+            const sessionId = this.extractSessionId(req);
 
-            // Check if using real Flower framework or simulation
-            if (config.use_real_flower) {
-                return await this.startRealFlowerServer(serverConfig, serverId);
-            } else {
-                return await this.startSimulatedFLServer(serverConfig, serverId);
-            }
-
-        } catch (error) {
-            console.error('FL server start error:', error);
-            throw error;
-        }
-    }
-
-    async startRealFlowerServer(config, serverId) {
-        const pythonScript = path.join(__dirname, '../../python_engine/enhanced_fl_server.py');
-
-        return new Promise((resolve, reject) => {
-            const options = {
-                mode: 'text',
-                pythonPath: 'python',
-                scriptPath: path.dirname(pythonScript),
-                args: [
-                    'start_server',
-                    serverId,
-                    config.host,
-                    config.port.toString(),
-                    JSON.stringify(config)
-                ]
-            };
-
-            PythonShell.run(path.basename(pythonScript), options)
-                .then(messages => {
-                    try {
-                        const result = JSON.parse(messages.join(''));
-                        this.flServer = {
-                            id: serverId,
-                            config,
-                            status: 'running',
-                            startTime: new Date().toISOString(),
-                            real_flower: true,
-                            ...result
-                        };
-
-                        resolve({
-                            server_id: serverId,
-                            status: 'running',
-                            host: config.host,
-                            port: config.port,
-                            real_flower: true,
-                            message: 'Real Flower FL server started'
-                        });
-                    } catch (parseError) {
-                        reject(new Error('Failed to parse Flower server response'));
-                    }
-                })
-                .catch(err => {
-                    reject(new Error(`Flower server start failed: ${err.message}`));
-                });
-        });
-    }
-
-    async startSimulatedFLServer(config, serverId) {
-        this.flServer = {
-            id: serverId,
-            config,
-            status: 'running',
-            startTime: new Date().toISOString(),
-            real_flower: false,
-            global_model: this.initializeGlobalModel(),
-            round_number: 0
-        };
-
-        return {
-            server_id: serverId,
-            status: 'running',
-            host: config.host,
-            port: config.port,
-            real_flower: false,
-            message: 'Simulated FL server started'
-        };
-    }
-
-    initializeGlobalModel() {
-        // Initialize a simple neural network model structure
-        return {
-            layers: [
-                { type: 'dense', units: 128, activation: 'relu', input_shape: [784] },
-                { type: 'dense', units: 64, activation: 'relu' },
-                { type: 'dense', units: 10, activation: 'softmax' }
-            ],
-            weights: this.generateRandomWeights(),
-            optimizer: 'adam',
-            loss: 'categorical_crossentropy',
-            metrics: ['accuracy']
-        };
-    }
-
-    generateRandomWeights() {
-        // Generate random weights for demonstration
-        return {
-            layer_0: {
-                kernel: Array.from({length: 128 * 784}, () => (Math.random() - 0.5) * 0.1),
-                bias: Array.from({length: 128}, () => 0)
-            },
-            layer_1: {
-                kernel: Array.from({length: 64 * 128}, () => (Math.random() - 0.5) * 0.1),
-                bias: Array.from({length: 64}, () => 0)
-            },
-            layer_2: {
-                kernel: Array.from({length: 10 * 64}, () => (Math.random() - 0.5) * 0.1),
-                bias: Array.from({length: 10}, () => 0)
-            }
-        };
-    }
-
-    // Register FL client
-    async registerFLClient(clientInfo) {
-        const clientId = clientInfo.client_id || `fl_client_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-
-        const client = {
-            id: clientId,
-            ...clientInfo,
-            registered_at: new Date().toISOString(),
-            status: 'registered',
-            local_model: null,
-            data_size: clientInfo.data_size || Math.floor(Math.random() * 1000) + 100,
-            device_type: clientInfo.device_type || 'mobile',
-            location: clientInfo.location || 'unknown',
-            privacy_budget: clientInfo.privacy_budget || 1.0
-        };
-
-        this.flClients.set(clientId, client);
-        this.clientData.set(clientId, {
-            training_data: this.generateClientData(client.data_size),
-            local_updates: []
+            this.handleWebSocketConnection(ws, userId, sessionId);
         });
 
-        return {
-            client_id: clientId,
-            status: 'registered',
-            server_config: this.flServer?.config || this.serverConfig
-        };
+        console.log('Enhanced FL WebSocket server initialized');
     }
 
-    generateClientData(dataSize) {
-        // Generate synthetic training data for demonstration
-        return Array.from({length: dataSize}, () => ({
-            features: Array.from({length: 784}, () => Math.random()),
-            label: Math.floor(Math.random() * 10)
-        }));
-    }
+    // Handle WebSocket connections
+    handleWebSocketConnection(ws, userId, sessionId) {
+        console.log(`User ${userId} connected to session ${sessionId}`);
 
-    // Start federated learning round
-    async startFLRound(roundConfig = {}) {
-        if (!this.flServer || this.flServer.status !== 'running') {
-            throw new Error('FL server is not running');
-        }
-
-        const roundId = `fl_round_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-        const roundNumber = this.flServer.round_number + 1;
-
-        const round = {
-            id: roundId,
-            round_number: roundNumber,
-            status: 'active',
-            start_time: new Date().toISOString(),
-            config: {
-                algorithm: roundConfig.algorithm || 'fedavg',
-                learning_rate: roundConfig.learning_rate || 0.01,
-                batch_size: roundConfig.batch_size || 32,
-                epochs: roundConfig.epochs || 5,
-                min_clients: roundConfig.min_clients || 2,
-                timeout: roundConfig.timeout || 300000,
-                privacy_technique: roundConfig.privacy_technique || null,
-                ...roundConfig
-            },
-            participating_clients: [],
-            client_updates: [],
-            global_model: JSON.parse(JSON.stringify(this.flServer.global_model))
-        };
-
-        this.activeRounds.set(roundId, round);
-        this.flServer.round_number = roundNumber;
-
-        // Select participating clients
-        const availableClients = Array.from(this.flClients.values())
-            .filter(client => client.status === 'registered');
-
-        if (availableClients.length < round.config.min_clients) {
-            throw new Error(`Not enough clients available. Required: ${round.config.min_clients}, Available: ${availableClients.length}`);
-        }
-
-        round.participating_clients = availableClients
-            .sort(() => Math.random() - 0.5)
-            .slice(0, Math.min(availableClients.length, round.config.min_clients * 2));
-
-        // Start client training
-        await this.startClientTraining(round);
-
-        return {
-            round_id: roundId,
-            round_number: roundNumber,
-            participating_clients: round.participating_clients.length,
-            algorithm: round.config.algorithm,
+        // Add to participants
+        this.participants.set(userId, {
+            id: userId,
+            sessionId,
+            ws,
+            connectedAt: new Date(),
+            lastActivity: new Date(),
             status: 'active'
+        });
+
+        // Join collaboration room
+        this.joinCollaborationRoom(sessionId, userId, ws);
+
+        // Handle messages
+        ws.on('message', (message) => {
+            this.handleWebSocketMessage(userId, sessionId, message);
+        });
+
+        // Handle disconnection
+        ws.on('close', () => {
+            this.handleParticipantDisconnection(userId, sessionId);
+        });
+
+        // Send welcome message
+        this.sendToParticipant(userId, {
+            type: 'welcome',
+            data: {
+                userId,
+                sessionId,
+                timestamp: new Date(),
+                activeParticipants: this.getActiveParticipants(sessionId)
+            }
+        });
+    }
+
+    // Create advanced FL session
+    async createAdvancedFLSession(config) {
+        const sessionId = `fl_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+        const session = {
+            id: sessionId,
+            name: config.name || 'Advanced FL Session',
+            participants: [],
+            maxParticipants: config.maxParticipants || 10,
+            modelConfig: {
+                type: config.modelType || 'neural_network',
+                architecture: config.architecture || 'simple_cnn',
+                dataset: config.dataset || 'distributed_biodiversity'
+            },
+            privacyConfig: {
+                differentialPrivacy: config.differentialPrivacy || true,
+                noiseMultiplier: config.noiseMultiplier || 0.1,
+                secureAggregation: config.secureAggregation || true
+            },
+            collaborationConfig: {
+                realTimeUpdates: true,
+                resultSharing: true,
+                modelMerging: config.modelMerging || 'fedavg'
+            },
+            status: 'waiting',
+            created: new Date(),
+            rounds: [],
+            globalModel: null,
+            metrics: {
+                totalRounds: 0,
+                averageAccuracy: 0,
+                participationRate: 0,
+                communicationCost: 0
+            }
+        };
+
+        this.activeSessions.set(sessionId, session);
+        this.collaborationRooms.set(sessionId, new Set());
+
+        return {
+            sessionId,
+            status: 'created',
+            config: session,
+            joinUrl: `/fl/join/${sessionId}`,
+            websocketUrl: `ws://localhost:5001/fl/ws/${sessionId}`
         };
     }
 
-    async startClientTraining(round) {
-        const trainingPromises = round.participating_clients.map(async (client) => {
-            try {
-                const clientData = this.clientData.get(client.id);
-                const localUpdate = await this.trainClientModel(client, round, clientData);
+    // Start FL training with real-time collaboration
+    async startCollaborativeTraining(sessionId) {
+        const session = this.activeSessions.get(sessionId);
 
-                round.client_updates.push({
-                    client_id: client.id,
-                    local_update: localUpdate,
-                    training_time: localUpdate.training_time,
-                    data_size: clientData.training_data.length,
-                    privacy_budget_used: localUpdate.privacy_budget_used || 0
-                });
+        if (!session) {
+            throw new Error('Session not found');
+        }
 
-                return { client_id: client.id, success: true };
-            } catch (error) {
-                console.error(`Client ${client.id} training failed:`, error);
-                return { client_id: client.id, success: false, error: error.message };
+        session.status = 'training';
+
+        // Initialize global model
+        session.globalModel = await this.initializeGlobalModel(session.modelConfig);
+
+        // Start training rounds
+        const trainingProcess = spawn('python', [
+            path.join(__dirname, '../../python_engine/run_federated_learning.py'),
+            sessionId,
+            JSON.stringify(session.modelConfig),
+            JSON.stringify(session.privacyConfig)
+        ]);
+
+        // Handle training output
+        trainingProcess.stdout.on('data', (data) => {
+            const output = data.toString().trim();
+            this.handleTrainingOutput(sessionId, output);
+        });
+
+        trainingProcess.stderr.on('data', (data) => {
+            console.error(`FL Training Error: ${data}`);
+        });
+
+        trainingProcess.on('close', (code) => {
+            session.status = code === 0 ? 'completed' : 'failed';
+            this.broadcastToRoom(sessionId, {
+                type: 'training_complete',
+                data: { success: code === 0, finalMetrics: session.metrics }
+            });
+        });
+
+        return {
+            sessionId,
+            status: 'training_started',
+            processId: trainingProcess.pid,
+            estimatedDuration: this.estimateTrainingDuration(session)
+        };
+    }
+
+    // Real-time model updates and collaboration
+    async updateModelWithParticipant(sessionId, participantId, localModelUpdate) {
+        const session = this.activeSessions.get(sessionId);
+
+        if (!session) {
+            throw new Error('Session not found');
+        }
+
+        // Validate participant
+        if (!session.participants.find(p => p.id === participantId)) {
+            throw new Error('Participant not in session');
+        }
+
+        // Store local update
+        const updateId = `update_${Date.now()}_${participantId}`;
+        const update = {
+            id: updateId,
+            participantId,
+            modelUpdate: localModelUpdate,
+            timestamp: new Date(),
+            validated: false
+        };
+
+        // Add to current round
+        if (!session.currentRound) {
+            session.currentRound = {
+                roundNumber: session.rounds.length + 1,
+                updates: [],
+                startTime: new Date()
+            };
+        }
+
+        session.currentRound.updates.push(update);
+
+        // Check if round is complete
+        if (session.currentRound.updates.length >= session.participants.length * 0.8) {
+            await this.completeTrainingRound(sessionId);
+        }
+
+        // Broadcast update to all participants
+        this.broadcastToRoom(sessionId, {
+            type: 'model_update',
+            data: {
+                participantId,
+                updateId,
+                timestamp: update.timestamp,
+                roundProgress: session.currentRound.updates.length / session.participants.length
             }
         });
 
-        // Wait for all clients to complete training
-        await Promise.allSettled(trainingPromises);
-
-        // Aggregate client updates
-        await this.aggregateClientUpdates(round);
+        return { updateId, roundProgress: session.currentRound.updates.length / session.participants.length };
     }
 
-    async trainClientModel(client, round, clientData) {
-        // Simulate local training
-        const trainingTime = (round.config.epochs * clientData.training_data.length / round.config.batch_size) * 0.001;
-        await new Promise(resolve => setTimeout(resolve, Math.min(trainingTime * 1000, 5000))); // Max 5 seconds for demo
+    // Complete training round and aggregate models
+    async completeTrainingRound(sessionId) {
+        const session = this.activeSessions.get(sessionId);
 
-        // Generate local model update
-        const localUpdate = {
-            client_id: client.id,
-            round_id: round.id,
-            model_weights: this.generateLocalUpdate(round.global_model),
-            training_loss: 0.5 + Math.random() * 0.5,
-            training_accuracy: 0.7 + Math.random() * 0.3,
-            validation_loss: 0.6 + Math.random() * 0.4,
-            validation_accuracy: 0.65 + Math.random() * 0.3,
-            training_time: trainingTime,
-            samples_used: clientData.training_data.length,
-            privacy_budget_used: round.config.privacy_technique ? Math.random() * 0.1 : 0
-        };
-
-        return localUpdate;
-    }
-
-    generateLocalUpdate(globalModel) {
-        // Generate a local model update by adding noise to global weights
-        const localWeights = JSON.parse(JSON.stringify(globalModel.weights));
-
-        Object.keys(localWeights).forEach(layerKey => {
-            const layer = localWeights[layerKey];
-            layer.kernel = layer.kernel.map(w => w + (Math.random() - 0.5) * 0.01);
-            layer.bias = layer.bias.map(b => b + (Math.random() - 0.5) * 0.01);
-        });
-
-        return localWeights;
-    }
-
-    async aggregateClientUpdates(round) {
-        const successfulUpdates = round.client_updates.filter(update => update.local_update);
-
-        if (successfulUpdates.length === 0) {
-            round.status = 'failed';
-            round.error = 'No successful client updates';
+        if (!session || !session.currentRound) {
             return;
         }
 
-        // Federated averaging
-        const aggregatedWeights = this.aggregateWeights(successfulUpdates, round.config.algorithm);
+        const round = session.currentRound;
+
+        // Aggregate model updates
+        const aggregatedModel = await this.aggregateModelUpdates(round.updates, session.collaborationConfig.modelMerging);
 
         // Update global model
-        this.flServer.global_model.weights = aggregatedWeights;
-        this.flServer.global_model.last_updated = new Date().toISOString();
+        session.globalModel = aggregatedModel;
 
         // Calculate round metrics
-        round.end_time = new Date().toISOString();
-        round.metrics = {
-            participating_clients: successfulUpdates.length,
-            total_samples: successfulUpdates.reduce((sum, update) => sum + update.data_size, 0),
-            average_training_time: successfulUpdates.reduce((sum, update) => sum + update.training_time, 0) / successfulUpdates.length,
-            average_accuracy: successfulUpdates.reduce((sum, update) => sum + update.local_update.training_accuracy, 0) / successfulUpdates.length,
-            global_accuracy: this.calculateGlobalAccuracy(aggregatedWeights),
-            privacy_budget_used: successfulUpdates.reduce((sum, update) => sum + (update.privacy_budget_used || 0), 0),
-            communication_cost: this.calculateCommunicationCost(successfulUpdates)
+        const roundMetrics = {
+            roundNumber: round.roundNumber,
+            participants: round.updates.length,
+            accuracy: this.calculateRoundAccuracy(aggregatedModel),
+            loss: this.calculateRoundLoss(aggregatedModel),
+            communicationCost: this.calculateCommunicationCost(round.updates),
+            duration: Date.now() - round.startTime.getTime()
         };
 
-        round.status = 'completed';
-        this.roundHistory.push(round);
-        this.activeRounds.delete(round.id);
+        // Store round results
+        session.rounds.push({
+            ...round,
+            endTime: new Date(),
+            aggregatedModel,
+            metrics: roundMetrics
+        });
 
-        console.log(`✅ FL Round ${round.round_number} completed with ${successfulUpdates.length} clients`);
+        // Update session metrics
+        this.updateSessionMetrics(session);
+
+        // Broadcast round completion
+        this.broadcastToRoom(sessionId, {
+            type: 'round_complete',
+            data: {
+                roundNumber: round.roundNumber,
+                metrics: roundMetrics,
+                globalModelUpdate: true,
+                nextRoundEta: this.estimateNextRoundTime(session)
+            }
+        });
+
+        // Clear current round
+        session.currentRound = null;
+
+        // Check if training should continue
+        if (this.shouldContinueTraining(session)) {
+            this.startNextRound(sessionId);
+        } else {
+            this.completeTraining(sessionId);
+        }
     }
 
-    aggregateWeights(updates, algorithm) {
-        const globalWeights = JSON.parse(JSON.stringify(this.flServer.global_model.weights));
+    // Advanced visualization data
+    async generateCollaborationVisualization(sessionId) {
+        const session = this.activeSessions.get(sessionId);
 
-        if (algorithm === 'fedavg') {
-            // Simple averaging
-            const totalSamples = updates.reduce((sum, update) => sum + update.samples_used, 0);
-
-            Object.keys(globalWeights).forEach(layerKey => {
-                const layer = globalWeights[layerKey];
-
-                // Reset to zero
-                layer.kernel = layer.kernel.map(() => 0);
-                layer.bias = layer.bias.map(() => 0);
-
-                // Weighted average of client updates
-                updates.forEach(update => {
-                    const weight = update.samples_used / totalSamples;
-                    const localLayer = update.local_update.model_weights[layerKey];
-
-                    layer.kernel = layer.kernel.map((w, i) => w + localLayer.kernel[i] * weight);
-                    layer.bias = layer.bias.map((b, i) => b + localLayer.bias[i] * weight);
-                });
-            });
+        if (!session) {
+            throw new Error('Session not found');
         }
 
-        return globalWeights;
+        return {
+            sessionId,
+            participants: session.participants.map(p => ({
+                id: p.id,
+                name: p.name,
+                status: p.status,
+                contributionScore: this.calculateParticipantScore(p, session),
+                activityTimeline: this.getParticipantActivity(p.id, session)
+            })),
+            rounds: session.rounds.map(round => ({
+                number: round.roundNumber,
+                participants: round.updates.length,
+                metrics: round.metrics,
+                timeline: {
+                    start: round.startTime,
+                    end: round.endTime,
+                    duration: round.endTime - round.startTime
+                }
+            })),
+            globalMetrics: {
+                totalRounds: session.metrics.totalRounds,
+                averageAccuracy: session.metrics.averageAccuracy,
+                participationRate: session.metrics.participationRate,
+                communicationEfficiency: this.calculateCommunicationEfficiency(session)
+            },
+            collaborationNetwork: this.generateCollaborationNetwork(session),
+            realTimeData: {
+                activeParticipants: this.getActiveParticipants(sessionId).length,
+                currentRound: session.currentRound ? session.currentRound.roundNumber : null,
+                pendingUpdates: session.currentRound ? session.currentRound.updates.length : 0
+            }
+        };
     }
 
-    calculateGlobalAccuracy(weights) {
-        // Simplified accuracy calculation for demonstration
-        return 0.75 + (this.flServer.round_number * 0.05) + (Math.random() - 0.5) * 0.1;
+    // Workflow automation for FL pipelines
+    async createFLWorkflow(name, config) {
+        const workflowId = `fl_workflow_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+        const workflow = {
+            id: workflowId,
+            name,
+            type: 'federated_learning',
+            steps: [
+                { id: 'data_preparation', name: 'Data Preparation', status: 'pending' },
+                { id: 'model_initialization', name: 'Model Initialization', status: 'pending' },
+                { id: 'participant_recruitment', name: 'Participant Recruitment', status: 'pending' },
+                { id: 'training_rounds', name: 'Training Rounds', status: 'pending' },
+                { id: 'model_aggregation', name: 'Model Aggregation', status: 'pending' },
+                { id: 'evaluation', name: 'Model Evaluation', status: 'pending' },
+                { id: 'deployment', name: 'Model Deployment', status: 'pending' }
+            ],
+            config,
+            status: 'created',
+            created: new Date(),
+            progress: 0
+        };
+
+        return workflow;
+    }
+
+    // Helper methods
+    extractUserId(req) {
+        return req.headers['x-user-id'] || `user_${Date.now()}`;
+    }
+
+    extractSessionId(req) {
+        const url = req.url;
+        const match = url.match(/\/fl\/ws\/([^\/]+)/);
+        return match ? match[1] : null;
+    }
+
+    joinCollaborationRoom(sessionId, userId, ws) {
+        if (!this.collaborationRooms.has(sessionId)) {
+            this.collaborationRooms.set(sessionId, new Set());
+        }
+        this.collaborationRooms.get(sessionId).add(userId);
+    }
+
+    handleWebSocketMessage(userId, sessionId, message) {
+        try {
+            const data = JSON.parse(message.toString());
+
+            switch (data.type) {
+                case 'model_update':
+                    this.handleModelUpdate(sessionId, userId, data.data);
+                    break;
+                case 'chat_message':
+                    this.handleChatMessage(sessionId, userId, data.data);
+                    break;
+                case 'status_update':
+                    this.handleStatusUpdate(sessionId, userId, data.data);
+                    break;
+                default:
+                    console.log(`Unknown message type: ${data.type}`);
+            }
+        } catch (error) {
+            console.error('Error handling WebSocket message:', error);
+        }
+    }
+
+    handleParticipantDisconnection(userId, sessionId) {
+        console.log(`User ${userId} disconnected from session ${sessionId}`);
+
+        // Update participant status
+        const participant = this.participants.get(userId);
+        if (participant) {
+            participant.status = 'disconnected';
+            participant.disconnectedAt = new Date();
+        }
+
+        // Remove from collaboration room
+        const room = this.collaborationRooms.get(sessionId);
+        if (room) {
+            room.delete(userId);
+        }
+
+        // Broadcast disconnection
+        this.broadcastToRoom(sessionId, {
+            type: 'participant_disconnected',
+            data: { userId, timestamp: new Date() }
+        });
+    }
+
+    sendToParticipant(userId, message) {
+        const participant = this.participants.get(userId);
+        if (participant && participant.ws.readyState === WebSocket.OPEN) {
+            participant.ws.send(JSON.stringify(message));
+        }
+    }
+
+    broadcastToRoom(sessionId, message) {
+        const room = this.collaborationRooms.get(sessionId);
+        if (room) {
+            room.forEach(userId => {
+                this.sendToParticipant(userId, message);
+            });
+        }
+    }
+
+    getActiveParticipants(sessionId) {
+        const room = this.collaborationRooms.get(sessionId);
+        if (!room) return [];
+
+        return Array.from(room).map(userId => {
+            const participant = this.participants.get(userId);
+            return participant ? {
+                id: userId,
+                name: participant.name || `User ${userId}`,
+                status: participant.status,
+                lastActivity: participant.lastActivity
+            } : null;
+        }).filter(Boolean);
+    }
+
+    async initializeGlobalModel(modelConfig) {
+        // Initialize global model based on configuration
+        return {
+            architecture: modelConfig.architecture,
+            weights: [], // Placeholder for actual weights
+            initialized: true,
+            timestamp: new Date()
+        };
+    }
+
+    async aggregateModelUpdates(updates, mergingStrategy) {
+        // Implement federated averaging or other aggregation strategies
+        return {
+            aggregated: true,
+            strategy: mergingStrategy,
+            participantCount: updates.length,
+            timestamp: new Date()
+        };
+    }
+
+    calculateRoundAccuracy(model) {
+        // Calculate round accuracy (placeholder)
+        return Math.random() * 0.2 + 0.8; // 80-100%
+    }
+
+    calculateRoundLoss(model) {
+        // Calculate round loss (placeholder)
+        return Math.random() * 0.5 + 0.1; // 0.1-0.6
     }
 
     calculateCommunicationCost(updates) {
-        // Estimate communication cost based on model size and number of clients
-        const modelSize = JSON.stringify(this.flServer.global_model.weights).length;
-        return modelSize * updates.length * 2; // Upload + download
+        // Calculate communication cost
+        return updates.length * 1024; // KB
     }
 
-    // Get FL status
-    getFLStatus() {
+    updateSessionMetrics(session) {
+        const rounds = session.rounds;
+        if (rounds.length > 0) {
+            session.metrics.totalRounds = rounds.length;
+            session.metrics.averageAccuracy = rounds.reduce((sum, round) => sum + round.metrics.accuracy, 0) / rounds.length;
+            session.metrics.participationRate = rounds.reduce((sum, round) => sum + round.participants, 0) / (rounds.length * session.participants.length);
+            session.metrics.communicationCost = rounds.reduce((sum, round) => sum + round.metrics.communicationCost, 0);
+        }
+    }
+
+    estimateTrainingDuration(session) {
+        // Estimate training duration based on configuration
+        const baseTime = 300; // 5 minutes
+        const participantMultiplier = Math.sqrt(session.participants.length);
+        const roundMultiplier = session.modelConfig.complexity || 1;
+
+        return baseTime * participantMultiplier * roundMultiplier;
+    }
+
+    estimateNextRoundTime(session) {
+        // Estimate time for next round
+        return 60; // 1 minute
+    }
+
+    shouldContinueTraining(session) {
+        // Determine if training should continue
+        return session.rounds.length < 10 && session.metrics.averageAccuracy < 0.95;
+    }
+
+    startNextRound(sessionId) {
+        // Start next training round
+        setTimeout(() => {
+            this.startCollaborativeTraining(sessionId);
+        }, 5000); // 5 second delay
+    }
+
+    completeTraining(sessionId) {
+        const session = this.activeSessions.get(sessionId);
+        if (session) {
+            session.status = 'completed';
+            session.completedAt = new Date();
+        }
+    }
+
+    calculateParticipantScore(participant, session) {
+        // Calculate participant contribution score
+        return Math.random() * 100; // Placeholder
+    }
+
+    getParticipantActivity(userId, session) {
+        // Get participant activity timeline
+        return []; // Placeholder
+    }
+
+    calculateCommunicationEfficiency(session) {
+        // Calculate communication efficiency
+        return session.metrics.communicationCost / session.metrics.totalRounds || 0;
+    }
+
+    generateCollaborationNetwork(session) {
+        // Generate collaboration network visualization
         return {
-            server_status: this.flServer?.status || 'stopped',
-            server_id: this.flServer?.id || null,
-            active_rounds: this.activeRounds.size,
-            total_clients: this.flClients.size,
-            active_clients: Array.from(this.flClients.values()).filter(c => c.status === 'active').length,
-            completed_rounds: this.roundHistory.length,
-            current_round: this.flServer?.round_number || 0,
-            real_flower: this.flServer?.real_flower || false,
-            algorithms: Object.keys(this.algorithms),
-            privacy_techniques: Object.keys(this.privacyTechniques)
+            nodes: session.participants.map(p => ({ id: p.id, name: p.name })),
+            edges: [] // Placeholder for collaboration edges
         };
     }
 
-    // Get round history
-    getRoundHistory(limit = 10) {
-        return this.roundHistory
-            .sort((a, b) => new Date(b.start_time) - new Date(a.start_time))
-            .slice(0, limit)
-            .map(round => ({
-                round_id: round.id,
-                round_number: round.round_number,
-                status: round.status,
-                start_time: round.start_time,
-                end_time: round.end_time,
-                participating_clients: round.participating_clients.length,
-                algorithm: round.config.algorithm,
-                metrics: round.metrics
-            }));
+    handleModelUpdate(sessionId, userId, data) {
+        // Handle model update messages
+        this.broadcastToRoom(sessionId, {
+            type: 'model_update_received',
+            data: { userId, ...data }
+        });
     }
 
-    // Get client statistics
-    getClientStatistics() {
-        const clients = Array.from(this.flClients.values());
-
-        return {
-            total_clients: clients.length,
-            active_clients: clients.filter(c => c.status === 'active').length,
-            device_distribution: this.groupBy(clients, 'device_type'),
-            location_distribution: this.groupBy(clients, 'location'),
-            average_data_size: clients.reduce((sum, c) => sum + (c.data_size || 0), 0) / clients.length,
-            total_data_size: clients.reduce((sum, c) => sum + (c.data_size || 0), 0)
+    handleChatMessage(sessionId, userId, data) {
+        // Handle chat messages
+        const message = {
+            id: `msg_${Date.now()}`,
+            userId,
+            text: data.text,
+            timestamp: new Date()
         };
+
+        // Store message (implement storage)
+        this.broadcastToRoom(sessionId, {
+            type: 'chat_message',
+            data: message
+        });
     }
 
-    groupBy(array, key) {
-        return array.reduce((groups, item) => {
-            const value = item[key] || 'unknown';
-            groups[value] = (groups[value] || 0) + 1;
-            return groups;
-        }, {});
-    }
-
-    // Stop FL server
-    async stopFLServer() {
-        if (!this.flServer) {
-            throw new Error('No FL server is running');
+    handleStatusUpdate(sessionId, userId, data) {
+        // Handle status updates
+        const participant = this.participants.get(userId);
+        if (participant) {
+            participant.status = data.status;
+            participant.lastActivity = new Date();
         }
 
-        if (this.flServer.real_flower) {
-            // Stop real Flower server
-            const pythonScript = path.join(__dirname, '../../python_engine/enhanced_fl_server.py');
-
-            await new Promise((resolve, reject) => {
-                const options = {
-                    mode: 'text',
-                    pythonPath: 'python',
-                    scriptPath: path.dirname(pythonScript),
-                    args: ['stop_server', this.flServer.id]
-                };
-
-                PythonShell.run(path.basename(pythonScript), options)
-                    .then(() => resolve())
-                    .catch(err => reject(new Error(`Flower server stop failed: ${err.message}`)));
-            });
-        }
-
-        this.flServer.status = 'stopped';
-        this.flServer.endTime = new Date().toISOString();
-
-        // Stop all active rounds
-        for (const [roundId, round] of this.activeRounds) {
-            round.status = 'cancelled';
-            this.activeRounds.delete(roundId);
-        }
-
-        console.log('✅ FL server stopped');
-        return { message: 'FL server stopped successfully' };
-    }
-
-    // Get available algorithms
-    getAvailableAlgorithms() {
-        return Object.entries(this.algorithms).map(([id, algo]) => ({
-            id,
-            ...algo
-        }));
-    }
-
-    // Get available privacy techniques
-    getAvailablePrivacyTechniques() {
-        return Object.entries(this.privacyTechniques).map(([id, technique]) => ({
-            id,
-            ...technique
-        }));
-    }
-
-    // Legacy method for backward compatibility
-    startFLSimulation() {
-        return this.startFLServer({ use_real_flower: false });
+        this.broadcastToRoom(sessionId, {
+            type: 'status_update',
+            data: { userId, status: data.status }
+        });
     }
 }
 
-// Create enhanced FL service instance
-const enhancedFLService = new EnhancedFLService();
-
-module.exports = {
-    enhancedFLService,
-    EnhancedFLService
-};
+module.exports = new EnhancedFLService();

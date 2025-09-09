@@ -1,0 +1,5 @@
+.bio-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bio-particle { position: absolute; border-radius: 50%; opacity: 0.75; filter: blur(0.5px) drop-shadow(0 0 6px rgba(0,170,255,0.9)); animation: drift var(--dur) linear infinite; }
+@keyframes drift { 0% { transform: translate3d(var(--x), 110vh, 0); opacity: 0; } 10% { opacity: 0.9; } 100% { transform: translate3d(calc(var(--x) + var(--dx)), -10vh, 0); opacity: 0; } }
+
+

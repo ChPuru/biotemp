@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import './App.css';
+import './App.scss';
 import AnalysisPage from './pages/AnalysisPage';
 import AdminPage from './pages/AdminPage';
 import MarketPage from './pages/MarketPage';
@@ -17,6 +17,7 @@ import LoginModal from './components/LoginModal';
 import { useErrorHandler } from './hooks/useErrorHandler';
 import offlineStorage from './services/offlineStorage';
 import logo from './assets/logo.png';
+import BioluminescentBackground from './components/BioluminescentBackground';
 
 const NavLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => {
     const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
     }
   }, []);
 
+
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     i18n.changeLanguage(e.target.value);
   };
@@ -64,6 +66,7 @@ function App() {
     <ErrorBoundary>
       <Router>
         <div className="App">
+          <BioluminescentBackground />
           <aside className="sidebar">
             <div className="sidebar-header">
               <img src={logo} alt="BioMapper Logo" className="sidebar-logo" />

@@ -189,6 +189,12 @@ router.post('/simulate/round', async (req, res) => {
     try {
         const { num_clients = 3, rounds = 1, algorithm = 'fedavg' } = req.body;
 
+        // Start FL server if not running
+        const status = enhancedFLService.getFLStatus();
+        if (status.server_status !== 'running') {
+            await enhancedFLService.startFLServer({ use_real_flower: false });
+        }
+
         // Register simulated clients if needed
         const currentClients = enhancedFLService.getFLStatus().total_clients;
         if (currentClients < num_clients) {
@@ -222,9 +228,11 @@ router.post('/simulate/round', async (req, res) => {
             clients_participated: num_clients
         });
     } catch (error) {
+        console.error('FL simulation error:', error);
         res.status(500).json({
             success: false,
-            error: error.message
+            error: error.message,
+            suggestion: 'Try starting the FL server first or check server status'
         });
     }
 });

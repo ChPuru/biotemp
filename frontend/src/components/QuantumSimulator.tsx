@@ -33,7 +33,7 @@ const QuantumSimulator: React.FC = () => {
 
   const fetchAlgorithms = async () => {
     try {
-      const response = await fetch('/api/quantum/algorithms');
+      const response = await fetch('http://localhost:5001/api/quantum/algorithms');
       const data = await response.json();
       if (data.success) {
         setAlgorithms(data.algorithms);
@@ -47,7 +47,7 @@ const QuantumSimulator: React.FC = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch('/api/quantum/jobs');
+      const response = await fetch('http://localhost:5001/api/quantum/jobs');
       const data = await response.json();
       if (data.success) {
         setJobs([...data.active_jobs, ...data.job_history]);
@@ -67,7 +67,7 @@ const QuantumSimulator: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/quantum/simulate', {
+      const response = await fetch('http://localhost:5001/api/quantum/simulate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const QuantumSimulator: React.FC = () => {
   };
 
   const updateParameter = (key: string, value: any) => {
-    setParameters(prev => ({
+    setParameters((prev: any) => ({
       ...prev,
       [key]: value
     }));
@@ -156,6 +156,8 @@ const QuantumSimulator: React.FC = () => {
               <input
                 type="text"
                 value={subValue as string}
+                placeholder={`Enter ${subKey}`}
+                aria-label={`${key} ${subKey}`}
                 onChange={(e) => {
                   const newValue = { ...value, [subKey]: e.target.value };
                   updateParameter(key, newValue);
@@ -173,6 +175,8 @@ const QuantumSimulator: React.FC = () => {
         <input
           type={typeof value === 'number' ? 'number' : 'text'}
           value={value}
+          placeholder={`Enter ${key}`}
+          aria-label={key}
           onChange={(e) => {
             const newValue = typeof value === 'number' ? parseFloat(e.target.value) : e.target.value;
             updateParameter(key, newValue);
@@ -195,6 +199,7 @@ const QuantumSimulator: React.FC = () => {
             <h3>Select Quantum Algorithm</h3>
             <select
               value={selectedAlgorithm}
+              aria-label="Select quantum algorithm"
               onChange={(e) => handleAlgorithmChange(e.target.value)}
             >
               <option value="">Choose an algorithm...</option>
