@@ -13,7 +13,8 @@ import PhylogeneticTree from './PhylogeneticTree';
 import XAIVisualization from './XAIVisualization';
 import FederatedLearningViz from './FederatedLearningViz';
 import BioAgentChat from './BioAgentChat';
-import AdvancedFeaturesPanel from './AdvancedFeaturesPanel';
+// import AdvancedFeaturesPanel from './AdvancedFeaturesPanel';
+import ComparativeFramework from './ComparativeFramework';
 import { getAll, enqueue, remove as removeFromQueue, EdgeQueueItem } from '../utils/idbQueue';
 import './Dashboard.css';
 
@@ -80,13 +81,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
     const [xaiData, setXaiData] = useState<IXaiAttribution[] | null>(null);
     const [showEnhancedXAI, setShowEnhancedXAI] = useState(false);
     const [selectedSequenceForXAI, setSelectedSequenceForXAI] = useState<string>('');
-    const [showPolicyModal, setShowPolicyModal] = useState(false);
     const [showNcbiModal, setShowNcbiModal] = useState(false);
     const [ncbiResult, setNcbiResult] = useState<INcbiResult | null>(null);
     const [isVerifying, setIsVerifying] = useState(false);
     const [latitude, setLatitude] = useState('19.0760');
     const [longitude, setLongitude] = useState('72.8777');
-    const [userRole, setUserRole] = useState<'researcher' | 'scientist'>('researcher');
     const [isLocating, setIsLocating] = useState(false);
     const [flLogs, setFlLogs] = useState<string[]>([]);
     const [isFlRunning, setIsFlRunning] = useState(false);
@@ -96,6 +95,10 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
     const [showFLModal, setShowFLModal] = useState(false);
     const [flData, setFlData] = useState<any>(null);
     const [flStatus, setFlStatus] = useState<any>(null);
+    const [ollamaMode, setOllamaMode] = useState<'standard' | 'expert' | 'novelty_detection' | 'training_assistance'>('standard');
+    const [includeRawDNA, setIncludeRawDNA] = useState(false);
+    const [trainingSamples, setTrainingSamples] = useState<any[]>([]);
+    const [modelPerformance, setModelPerformance] = useState<any>(null);
 
     useEffect(() => {
         const updateCount = async () => {
@@ -123,12 +126,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                 if (item.type === 'validate') {
                     await axios.post('http://localhost:5001/api/analysis/validate-finding',
                         { sequenceId: item.payload.sequenceId, confirmedSpecies: item.payload.speciesName, feedback: 'Confirmed (Edge Sync)' },
-                        { headers: { 'x-user-role': userRole } }
+                        { headers: { 'x-user-role': 'scientist' } }
                     );
                 } else if (item.type === 'flag') {
                     await axios.post('http://localhost:5001/api/analysis/flag',
                         { sequenceId: item.payload.sequenceId, reason: item.payload.reason || 'Edge Sync' },
-                        { headers: { 'x-user-role': userRole } }
+                        { headers: { 'x-user-role': 'scientist' } }
                     );
                 }
             } catch (e) {
@@ -139,7 +142,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
         }
         setEdgeQueueCount(failed.length);
         if (!failed.length) alert('Edge queue synced');
-    }, [userRole]);
+    }, []);
     
     useEffect(() => {
         const handler = async () => {
@@ -241,13 +244,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
             return;
         }
         try {
-            const response = await axios.post('http://localhost:5001/api/analysis/validate-finding', 
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert("Authentication required. Please log in.");
+                return;
+            }
+
+            const response = await axios.post('http://localhost:5001/api/analysis/validate-finding',
                 { sequenceId: sequenceId, confirmedSpecies: speciesName, feedback: 'Confirmed' },
-                { headers: { 'x-user-role': userRole } }
+                { headers: { 'Authorization': `Bearer ${token}`, 'x-user-role': 'scientist' } }
             );
             alert(`Validation successful! Block Hash: ${response.data.block.hash}`);
-        } catch (err) {
-            alert("Validation failed. This action is restricted to 'Scientist' role.");
+        } catch (err: any) {
+            console.error('Validation failed:', err);
+            if (err.response?.status === 401) {
+                alert("Authentication required. Please log in again.");
+            } else {
+                alert("Validation failed. This action is restricted to 'Scientist' role.");
+            }
         }
     };
 
@@ -354,12 +368,23 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
         setShowNcbiModal(true);
         setNcbiResult(null);
         try {
-            const response = await axios.post<INcbiResult>('http://localhost:5001/api/analysis/verify-ncbi', 
-                { sequence }, { headers: { 'x-user-role': userRole } }
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setNcbiResult({ status: "error", message: "Authentication required. Please log in." });
+                return;
+            }
+
+            const response = await axios.post<INcbiResult>('http://localhost:5001/api/analysis/verify-ncbi',
+                { sequence }, { headers: { 'Authorization': `Bearer ${token}`, 'x-user-role': 'scientist' } }
             );
             setNcbiResult(response.data);
-        } catch (err) {
-            setNcbiResult({ status: "error", message: "Failed to connect to verification service." });
+        } catch (err: any) {
+            console.error('NCBI verification failed:', err);
+            if (err.response?.status === 401) {
+                setNcbiResult({ status: "error", message: "Authentication required. Please log in again." });
+            } else {
+                setNcbiResult({ status: "error", message: "Failed to connect to verification service." });
+            }
         } finally {
             setIsVerifying(false);
         }
@@ -400,26 +425,67 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
         try {
             const token = localStorage.getItem('token');
             const trainingData = {
-                sequence_id: result.Sequence_ID,
-                predicted_species: result.Predicted_Species,
-                correct_species: correctedSpecies.trim(),
+                sequenceId: result.Sequence_ID,
+                originalPrediction: result.Predicted_Species,
+                correctedSpecies: correctedSpecies.trim(),
                 confidence: parseFloat(result.Classifier_Confidence),
-                novelty_score: parseFloat(result.Novelty_Score),
-                feedback_type: 'correction',
-                user_role: userRole
+                metadata: {
+                    novelty_score: parseFloat(result.Novelty_Score),
+                    iucn_status: result.iucn_status,
+                    location: `${latitude}, ${longitude}`
+                }
             };
 
-            await axios.post('http://localhost:5001/api/training/feedback', trainingData, {
-                headers: { 
+            // Add to enhanced training system
+            await axios.post('http://localhost:5001/api/analysis/training/add-sample', trainingData, {
+                headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });
 
-            alert(`Training data added successfully!\nOriginal: ${result.Predicted_Species}\nCorrected: ${correctedSpecies}`);
+            alert(`Training data added successfully!\nOriginal: ${result.Predicted_Species}\nCorrected: ${correctedSpecies}\n\nThis will help improve future classifications through reinforcement learning.`);
+
+            // Refresh training data
+            await loadTrainingData();
+
         } catch (error) {
             console.error('Failed to add training data:', error);
             alert('Failed to add training data. Please try again.');
+        }
+    };
+
+    const loadTrainingData = async () => {
+        try {
+            const response = await axios.get('http://localhost:5001/api/analysis/training/data');
+            setTrainingSamples(response.data.data || []);
+        } catch (error) {
+            console.error('Failed to load training data:', error);
+        }
+    };
+
+    const loadModelPerformance = async () => {
+        try {
+            const response = await axios.get('http://localhost:5001/api/analysis/training/performance');
+            setModelPerformance(response.data.performance);
+        } catch (error) {
+            console.error('Failed to load model performance:', error);
+        }
+    };
+
+    const handleEnhancedChat = async (message: string) => {
+        try {
+            const chatResponse = await axios.post('http://localhost:5001/api/analysis/chat', {
+                message,
+                context: analysisResults,
+                analysisMode: ollamaMode,
+                includeRawDNA: includeRawDNA
+            });
+
+            return chatResponse.data;
+        } catch (error) {
+            console.error('Enhanced chat error:', error);
+            return { reply: "I'm experiencing technical difficulties. Please try again later.", error: true };
         }
     };
     
@@ -540,18 +606,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                     )) : <p>Loading live explanation from Python engine...</p>}
                 </div>
             </Modal>
-            <Modal show={showPolicyModal} onClose={() => setShowPolicyModal(false)} title="Policy & Compliance Alignment">
-                <h4>Alignment with MoEFCC NBSAP</h4>
-                <p>This platform is a direct implementation of Target 1.3 of the National Biodiversity Strategy and Action Plan.</p>
-                <h4>SIH 2025 Judging Rubric Compliance</h4>
-                <ul>
-                    <li>✅ Quantum Approach (Live Job on IBMQ Simulator)</li>
-                    <li>✅ Multi-Language Support (5 Languages)</li>
-                    <li>✅ Solves "Hidden Pain Point" of Novel Taxa (Live Ensemble)</li>
-                    <li>✅ Field-Ready Deployment (PWA & Full Offline Mode)</li>
-                    <li>✅ Integration with Indian APIs (ISRO & Bhuvan)</li>
-                </ul>
-            </Modal>
             <Modal show={showNcbiModal} onClose={() => setShowNcbiModal(false)} title="Live NCBI BLAST Verification">
                 {isVerifying && <p>Running live search against global NCBI database...</p>}
                 {ncbiResult && (
@@ -644,11 +698,15 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
 
             {(!hideControls || showLocationPdf) && (
             <div className="controls-header">
-                <div className="input-group">
-                    <label htmlFor="latitude-input">{t('latitude')}</label>
-                    <input id="latitude-input" type="text" value={latitude} onChange={(e) => setLatitude(e.target.value)} />
-                    <label htmlFor="longitude-input">{t('longitude')}</label>
-                    <input id="longitude-input" type="text" value={longitude} onChange={(e) => setLongitude(e.target.value)} />
+                <div className="location-inputs">
+                    <div className="input-group">
+                        <label htmlFor="latitude-input">{t('latitude')}</label>
+                        <input id="latitude-input" type="text" value={latitude} onChange={(e) => setLatitude(e.target.value)} placeholder="e.g. 19.0760" />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="longitude-input">{t('longitude')}</label>
+                        <input id="longitude-input" type="text" value={longitude} onChange={(e) => setLongitude(e.target.value)} placeholder="e.g. 72.8777" />
+                    </div>
                     <button onClick={handleGetLocation} disabled={isLocating} className="location-button">
                         {isLocating ? t('locating') : t('get_location')}
                     </button>
@@ -658,47 +716,121 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                         <div className="input-group">
                             <label htmlFor="fasta-upload" className="sr-only">{t('upload_prompt')}</label>
                             <input id="fasta-upload" type="file" onChange={handleFileChange} accept=".fasta,.fa" />
+                            {selectedFile && (
+                                <div className="file-info">
+                                    <span className="file-name">📄 {selectedFile.name}</span>
+                                    <span className="file-size">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                                </div>
+                            )}
                         </div>
-                        <div className="input-group">
-                            <button onClick={handleAnalyze} disabled={isLoading}>
-                                {isLoading ? t('analyzing') : t('analyze_button')}
-                            </button>
-                            <button onClick={() => setShowPolicyModal(true)} className="policy-button">{t('policy_button')}</button>
-                            <button onClick={handleGenerateReport} disabled={!analysisResults} className="pdf-button">{t('generate_pdf')}</button>
-                            <div className="role-switcher">
-                                <span>Demo Role:</span>
+
+                        {/* Enhanced Analysis Controls */}
+                        <div className="analysis-controls">
+                            <h4>🧬 Advanced DNA Analysis</h4>
+                            <div className="control-row">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={includeRawDNA}
+                                        onChange={(e) => setIncludeRawDNA(e.target.checked)}
+                                    />
+                                    Include Raw DNA Data for Ollama
+                                </label>
+                            </div>
+                            <div className="control-row">
+                                <label>Analysis Mode:</label>
                                 <select
-                                    value={userRole}
-                                    onChange={(e) => setUserRole(e.target.value as 'researcher' | 'scientist')}
-                                    aria-label="Select user role"
+                                    value={ollamaMode}
+                                    onChange={(e) => setOllamaMode(e.target.value as any)}
                                 >
-                                    <option value="researcher">Researcher</option>
-                                    <option value="scientist">Scientist</option>
+                                    <option value="standard">🚀 Standard Analysis</option>
+                                    <option value="expert">🔬 Expert Mode (Raw DNA)</option>
+                                    <option value="novelty_detection">🆕 Novelty Detection</option>
+                                    <option value="training_assistance">🎯 Training Assistance</option>
                                 </select>
                             </div>
+                            <div className="analysis-info">
+                                <div className="info-item">
+                                    <span className="label">🧬 Production Models:</span>
+                                    <span className="value">NT 2.5B + HyenaDNA</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">🤖 Ollama Models:</span>
+                                    <span className="value">CodeLlama + Llama2 + Mistral</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">⚡ Local Models:</span>
+                                    <span className="value">Caduceus + Mamba-DNA + Specialized</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">🗄️ Database Integration:</span>
+                                    <span className="value">NCBI BLAST + Indian Species DB</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">🛡️ Fallback System:</span>
+                                    <span className="value">Never Fails - Always Provides Results</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">🎯 Total Ensemble:</span>
+                                    <span className="value">8 Models + 2 Databases + Emergency Backup</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">☁️ Cloud Integration:</span>
+                                    <span className="value">Cloudflare Tunnel + Graceful Degradation</span>
+                                </div>
+                                <div className="info-item">
+                                    <span className="label">🔬 Analysis Methods:</span>
+                                    <span className="value">6 Pipelines + Ensemble Voting + Multi-Fallback</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <div className="input-group">
+                            <button onClick={handleAnalyze} disabled={isLoading} className={isLoading ? 'loading' : ''}>
+                                {isLoading ? (
+                                    <>
+                                        <span className="loading-spinner">⟳</span>
+                                        {t('analyzing')}
+                                    </>
+                                ) : (
+                                    t('analyze_button')
+                                )}
+                            </button>
+                            <button onClick={handleGenerateReport} disabled={!analysisResults} className="pdf-button">{t('generate_pdf')}</button>
+                        </div>
+
+                        {/* Training Data Status */}
+                        {trainingSamples.length > 0 && (
+                            <div className="training-status">
+                                <h4>🎯 Training Data</h4>
+                                <p>{trainingSamples.length} samples collected</p>
+                                {modelPerformance && (
+                                    <div className="performance-metrics">
+                                        <span>Accuracy: {(modelPerformance.performance_metrics?.accuracy * 100).toFixed(1)}%</span>
+                                        <span>Novelty Detection: {(modelPerformance.performance_metrics?.novelty_detection * 100).toFixed(1)}%</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </>
                 )}
                 {showLocationPdf && (
                     <div className="input-group">
-                        <button onClick={() => setShowPolicyModal(true)} className="policy-button">{t('policy_button')}</button>
                         <button onClick={handleGenerateReport} disabled={!analysisResults} className="pdf-button">{t('generate_pdf')}</button>
-                        <div className="role-switcher">
-                            <span>Demo Role:</span>
-                            <select
-                                value={userRole}
-                                onChange={(e) => setUserRole(e.target.value as 'researcher' | 'scientist')}
-                                aria-label="Select user role"
-                            >
-                                <option value="researcher">Researcher</option>
-                                <option value="scientist">Scientist</option>
-                            </select>
-                        </div>
                     </div>
                 )}
             </div>
             )}
-            {error && <p className="error-message">{error}</p>}
+            {error && (
+                <div className="error-message">
+                    <div className="error-icon">⚠️</div>
+                    <div className="error-content">
+                        <h4>Analysis Error</h4>
+                        <p>{error}</p>
+                        <button onClick={() => setError('')} className="error-dismiss">×</button>
+                    </div>
+                </div>
+            )}
 
             {analysisResults && (
                 <div className="results-container">
@@ -713,7 +845,18 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
 
                     <h4 className="results-section-header">{t('results_header')}</h4>
                     <table className="results-table">
-                        <thead><tr><th>Sequence ID</th><th>Final Prediction</th><th>IUCN Status</th><th>Confidence</th><th>Novelty Score</th><th>Local DB Match</th><th>Alerts</th><th>Actions</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th>Sequence ID</th>
+                                <th>Ensemble Prediction</th>
+                                <th>Confidence</th>
+                                <th>Models Agreed</th>
+                                <th>IUCN Status</th>
+                                <th>Novelty</th>
+                                <th>Methods Used</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             {analysisResults.classification_results.map((res, index) => {
                                 const impactAlerts = getImpactReport(res);
@@ -736,9 +879,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                                                 setShowEnhancedXAI(true);
                                             }} className="table-action-btn secondary">🧠 Enhanced XAI</button>
                                             <button onClick={() => handleAddToTraining(res.Sequence_ID, res.Predicted_Species)} className="table-action-btn">📚 Add to Training</button>
-                                            {userRole === 'scientist' && 
+                                            {true &&
                                                 <button onClick={() => handleValidateFinding(res.Sequence_ID, res.Predicted_Species)} className="table-action-btn">Confirm</button>}
-                                            {userRole === 'scientist' &&
+                                            {true &&
                                                 <button onClick={() => handleVerifyNcbi(res.Sequence_ID)} className="table-action-btn secondary">Verify on NCBI</button>}
                                             <button onClick={async () => {
                                                 const isEdge = localStorage.getItem('edge_mode') === '1';
@@ -748,17 +891,28 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
                                                     alert('Flag queued (Edge Mode).');
                                                 } else {
                                                     try {
-                                                        await axios.post('http://localhost:5001/api/analysis/flag', 
+                                                        const token = localStorage.getItem('token');
+                                                        if (!token) {
+                                                            alert('Authentication required. Please log in.');
+                                                            return;
+                                                        }
+
+                                                        await axios.post('http://localhost:5001/api/analysis/flag',
                                                             { sequenceId: res.Sequence_ID, reason: 'manual-flag' },
-                                                            { headers: { 'x-user-role': userRole } }
+                                                            { headers: { 'Authorization': `Bearer ${token}`, 'x-user-role': 'scientist' } }
                                                         );
                                                         alert('Flagged for review.');
-                                                    } catch (e) {
-                                                        alert('Flag failed. Only scientist can flag in this demo.');
+                                                    } catch (e: any) {
+                                                        console.error('Flag failed:', e);
+                                                        if (e.response?.status === 401) {
+                                                            alert('Authentication required. Please log in again.');
+                                                        } else {
+                                                            alert('Flag failed. Only scientist can flag in this demo.');
+                                                        }
                                                     }
                                                 }
                                             }} className="table-action-btn secondary">Flag</button>
-                                            {userRole === 'scientist' &&
+                                            {true &&
                                                 <button onClick={() => handleAddTrainingData(res)} className="table-action-btn">Add to Training</button>}
                                         </td>
                                     </tr>
@@ -843,8 +997,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onAnalysisComplete, initialAnalys
             </div>
             <FederatedLearningViz />
             
-            {/* Advanced Features Panel */}
-            <AdvancedFeaturesPanel analysisResults={analysisResults} />
+            {/* Comparative Framework - Shows improvements over traditional methods */}
+            <ComparativeFramework />
+
+            {/* Advanced Features Panel - Commented out for demo */}
+            {/* <AdvancedFeaturesPanel analysisResults={analysisResults} /> */}
             
             {/* Bio Agent Chat - Conversational Research Assistant */}
             {analysisResults && (

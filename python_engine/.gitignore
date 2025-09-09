@@ -1,0 +1,2562 @@
+# Python Engine .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads and user data
+uploads/
+user_data/
+temp_files/
+
+# API keys and secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Backup files
+*.bak
+*.backup
+backup/
+
+# Compressed files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.tar.bz2
+
+# Large data files
+*.fasta
+*.fa
+*.fq
+*.fastq
+*.sam
+*.bam
+*.vcf
+*.gff
+*.gtf
+*.bed
+*.bigwig
+*.bigbed
+
+# Model files
+*.model
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.pt
+*.pth
+*.onnx
+
+# Quantum job results
+quantum_results/
+fl_results/
+
+# Cache
+.cache/
+cache/
+*.cache
+
+# Lock files
+*.lock
+
+# Package files
+*.deb
+*.rpm
+*.dmg
+*.pkg
+*.msi
+
+# Executables
+*.exe
+*.app
+*.dmg
+*.pkg
+*.deb
+*.rpm
+
+# Scripts
+*.sh
+*.bat
+*.cmd
+*.ps1
+
+# Configuration files (keep templates)
+*.conf
+*.config
+*.ini
+*.cfg
+!*.template
+!*.example
+
+# Local development overrides
+.env.local
+.env.development
+.env.production
+
+# IDE specific
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/shelf
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Local development
+local/
+dev/
+development/
+
+# Production
+production/
+prod/
+
+# Staging
+staging/
+stage/
+
+# Testing
+test/
+tests/
+testing/
+
+# Documentation
+docs/
+documentation/
+
+# Examples
+examples/
+samples/
+
+# Demos
+demos/
+demo/
+
+# Tutorials
+tutorials/
+tutorial/
+
+# Guides
+guides/
+guide/
+
+# API documentation
+api-docs/
+swagger/
+
+# OpenAPI
+openapi/
+swagger/
+
+# GraphQL
+schema.graphql
+schema.json
+
+# Machine learning models
+ml_models/
+ai_models/
+trained_models/
+
+# Data processing
+processed_data/
+raw_data/
+intermediate_data/
+
+# Reports
+reports/
+analysis_reports/
+generated_reports/
+
+# Cost analysis data
+cost_analysis/
+budget_data/
+
+# Real-world case study data
+case_studies/data/
+policy_data/
+
+# Compliance data
+compliance_data/
+audit_data/
+
+# Security data
+security_data/
+threat_intelligence/
+
+# Benchmark results
+benchmark_results/
+performance_tests/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Local development overrides
+docker-compose.local.yml
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+logs/
+*.log
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Coverage directory
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Rollup.js default build output
+dist/
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Submodules (not meant to be pushed)
+alphafold/
+openfold/
+
+# Large data files specific to bioinformatics
+*.fasta
+*.fa
+*.fq
+*.fastq
+*.sam
+*.bam
+*.vcf
+*.gff
+*.gtf
+*.bed
+*.bigwig
+*.bigbed
+*.pdb
+*.cif
+
+# Sequence databases
+*.blast
+*.db
+*.nhr
+*.nin
+*.nsq
+*.nal
+
+# Alignment files
+*.maf
+*.axt
+*.chain
+
+# Tree files
+*.tree
+*.tre
+*.nwk
+*.newick
+
+# Matrix files
+*.dist
+*.phylip
+
+# Quality control files
+*.html
+*.zip
+
+# Pipeline outputs
+results/
+output/
+out/
+
+# Configuration files
+config/
+configs/
+configuration/
+
+# Secrets and keys
+secrets/
+keys/
+certificates/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Session files
+*.session
+*.sess
+
+# Lock files
+*.lock
+*.lck
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Swap files
+*.swp
+*.swo
+*.swn
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Log files
+*.log
+logs/
+
+# Error logs
+error.log
+errors.log
+
+# Debug files
+debug.log
+debug/
+
+# Access logs
+access.log
+
+# System logs
+system.log
+
+# Application logs
+app.log
+application.log
+
+# Server logs
+server.log
+
+# Database logs
+db.log
+database.log
+
+# Cache directories
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Conda environments
+conda-env/
+miniconda/
+anaconda/
+
+# Pipenv
+Pipfile.lock
+
+# Poetry
+poetry.lock
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Spyder
+.spyderproject
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Atom
+.atom/
+
+# Brackets
+.brackets.json
+
+# TextMate
+*.tmproj
+*.tmproject
+tmtags
+
+# Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/
+
+# Intellij IDEA
+.idea/
+
+# RubyMine
+.idea/
+
+# WebStorm
+.idea/
+
+# PhpStorm
+.idea/
+
+# CLion
+.idea/
+
+# GoLand
+.idea/
+
+# Rider
+.idea/
+
+# DataSpell
+.idea/
+
+# Aqua
+.idea/
+
+# Ruby
+.bundle/
+.byebug_history
+.gem
+*.gem
+.ruby-version
+.ruby-gemset
+
+# Rails
+config/database.yml
+config/secrets.yml
+config/application.yml
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Bower
+bower_components/
+
+# Grunt
+.grunt/
+
+# Gulp
+.gulp/
+
+# Webpack
+.webpack/
+
+# Rollup
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# TypeScript
+*.tsbuildinfo
+
+# JavaScript
+lib-cov
+coverage
+.nyc_output
+.grunt
+bower_components
+.lock-wscript
+build/Release
+node_modules/
+jspm_packages/
+typings/
+.npm
+.eslintcache
+.node_repl_history
+.yarn-integrity
+.cache
+.parcel-cache
+.next
+.nuxt
+dist
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Java
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# Gradle
+.gradle
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+.gradletasknamecache
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Visual Studio
+.vs/
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Linux
+*~
+.directory
+.Trash-*
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db:encryptable
+*.stackdump
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Application specific
+# Add your application specific ignore patterns here
+
+# BioMapper specific
+biomapper_cache/
+biomapper_logs/
+biomapper_temp/
+biomapper_output/
+biomapper_results/
+
+# AI/ML specific
+model_cache/
+model_weights/
+training_data/
+validation_data/
+test_data/
+
+# API specific
+api_cache/
+api_logs/
+api_temp/
+
+# Database specific
+db_cache/
+db_logs/
+db_temp/
+db_backup/
+
+# Security specific
+security_cache/
+security_logs/
+security_temp/
+
+# Performance specific
+performance_cache/
+performance_logs/
+performance_temp/
+
+# Monitoring specific
+monitoring_cache/
+monitoring_logs/
+monitoring_temp/
+
+# Analytics specific
+analytics_cache/
+analytics_logs/
+analytics_temp/
+
+# Reporting specific
+reporting_cache/
+reporting_logs/
+reporting_temp/
+
+# Dashboard specific
+dashboard_cache/
+dashboard_logs/
+dashboard_temp/
+
+# Admin specific
+admin_cache/
+admin_logs/
+admin_temp/
+
+# User specific
+user_cache/
+user_logs/
+user_temp/
+
+# Session specific
+session_cache/
+session_logs/
+session_temp/
+
+# Authentication specific
+auth_cache/
+auth_logs/
+auth_temp/
+
+# Authorization specific
+authorization_cache/
+authorization_logs/
+authorization_temp/
+
+# Audit specific
+audit_cache/
+audit_logs/
+audit_temp/
+
+# Compliance specific
+compliance_cache/
+compliance_logs/
+compliance_temp/
+
+# Policy specific
+policy_cache/
+policy_logs/
+policy_temp/
+
+# Configuration specific
+config_cache/
+config_logs/
+config_temp/
+
+# Environment specific
+env_cache/
+env_logs/
+env_temp/
+
+# Deployment specific
+deployment_cache/
+deployment_logs/
+deployment_temp/
+
+# Build specific
+build_cache/
+build_logs/
+build_temp/
+
+# Development specific
+dev_cache/
+dev_logs/
+dev_temp/
+
+# Testing specific
+test_cache/
+test_logs/
+test_temp/
+
+# Staging specific
+staging_cache/
+staging_logs/
+staging_temp/
+
+# Production specific
+prod_cache/
+prod_logs/
+prod_temp/
+
+# Backup specific
+backup_cache/
+backup_logs/
+backup_temp/
+
+# Archive specific
+archive_cache/
+archive_logs/
+archive_temp/
+
+# Temporary specific
+temp_cache/
+temp_logs/
+temp_temp/
+
+# Scratch specific
+scratch_cache/
+scratch_logs/
+scratch_temp/
+
+# Work specific
+work_cache/
+work_logs/
+work_temp/
+
+# Draft specific
+draft_cache/
+draft_logs/
+draft_temp/
+
+# Experimental specific
+experimental_cache/
+experimental_logs/
+experimental_temp/
+
+# Prototype specific
+prototype_cache/
+prototype_logs/
+prototype_temp/
+
+# Legacy specific
+legacy_cache/
+legacy_logs/
+legacy_temp/
+
+# Deprecated specific
+deprecated_cache/
+deprecated_logs/
+deprecated_temp/
+
+# Obsolete specific
+obsolete_cache/
+obsolete_logs/
+obsolete_temp/
+
+# Archive specific
+archived_cache/
+archived_logs/
+archived_temp/
+
+# Deleted specific
+deleted_cache/
+deleted_logs/
+deleted_temp/
+
+# Removed specific
+removed_cache/
+removed_logs/
+removed_temp/
+
+# Hidden specific
+hidden_cache/
+hidden_logs/
+hidden_temp/
+
+# Private specific
+private_cache/
+private_logs/
+private_temp/
+
+# Internal specific
+internal_cache/
+internal_logs/
+internal_temp/
+
+# External specific
+external_cache/
+external_logs/
+external_temp/
+
+# Public specific
+public_cache/
+public_logs/
+public_temp/
+
+# Shared specific
+shared_cache/
+shared_logs/
+shared_temp/
+
+# Common specific
+common_cache/
+common_logs/
+common_temp/
+
+# Utility specific
+utility_cache/
+utility_logs/
+utility_temp/
+
+# Helper specific
+helper_cache/
+helper_logs/
+helper_temp/
+
+# Tool specific
+tool_cache/
+tool_logs/
+tool_temp/
+
+# Library specific
+library_cache/
+library_logs/
+library_temp/
+
+# Framework specific
+framework_cache/
+framework_logs/
+framework_temp/
+
+# Module specific
+module_cache/
+module_logs/
+module_temp/
+
+# Package specific
+package_cache/
+package_logs/
+package_temp/
+
+# Component specific
+component_cache/
+component_logs/
+component_temp/
+
+# Service specific
+service_cache/
+service_logs/
+service_temp/
+
+# Controller specific
+controller_cache/
+controller_logs/
+controller_temp/
+
+# Model specific
+model_cache/
+model_logs/
+model_temp/
+
+# View specific
+view_cache/
+view_logs/
+view_temp/
+
+# Template specific
+template_cache/
+template_logs/
+template_temp/
+
+# Asset specific
+asset_cache/
+asset_logs/
+asset_temp/
+
+# Static specific
+static_cache/
+static_logs/
+static_temp/
+
+# Media specific
+media_cache/
+media_logs/
+media_temp/
+
+# File specific
+file_cache/
+file_logs/
+file_temp/
+
+# Upload specific
+upload_cache/
+upload_logs/
+upload_temp/
+
+# Download specific
+download_cache/
+download_logs/
+download_temp/
+
+# Export specific
+export_cache/
+export_logs/
+export_temp/
+
+# Import specific
+import_cache/
+import_logs/
+import_temp/
+
+# Sync specific
+sync_cache/
+sync_logs/
+sync_temp/
+
+# Async specific
+async_cache/
+async_logs/
+async_temp/
+
+# Queue specific
+queue_cache/
+queue_logs/
+queue_temp/
+
+# Job specific
+job_cache/
+job_logs/
+job_temp/
+
+# Task specific
+task_cache/
+task_logs/
+task_temp/
+
+# Worker specific
+worker_cache/
+worker_logs/
+worker_temp/
+
+# Process specific
+process_cache/
+process_logs/
+process_temp/
+
+# Thread specific
+thread_cache/
+thread_logs/
+thread_temp/
+
+# Event specific
+event_cache/
+event_logs/
+event_temp/
+
+# Message specific
+message_cache/
+message_logs/
+message_temp/
+
+# Notification specific
+notification_cache/
+notification_logs/
+notification_temp/
+
+# Alert specific
+alert_cache/
+alert_logs/
+alert_temp/
+
+# Error specific
+error_cache/
+error_logs/
+error_temp/
+
+# Exception specific
+exception_cache/
+exception_logs/
+exception_temp/
+
+# Debug specific
+debug_cache/
+debug_logs/
+debug_temp/
+
+# Trace specific
+trace_cache/
+trace_logs/
+trace_temp/
+
+# Info specific
+info_cache/
+info_logs/
+info_temp/
+
+# Warning specific
+warning_cache/
+warning_logs/
+warning_temp/
+
+# Critical specific
+critical_cache/
+critical_logs/
+critical_temp/
+
+# Fatal specific
+fatal_cache/
+fatal_logs/
+fatal_temp/
+
+# Emergency specific
+emergency_cache/
+emergency_logs/
+emergency_temp/
+
+# System specific
+system_cache/
+system_logs/
+system_temp/
+
+# Application specific
+application_cache/
+application_logs/
+application_temp/
+
+# Server specific
+server_cache/
+server_logs/
+server_temp/
+
+# Client specific
+client_cache/
+client_logs/
+client_temp/
+
+# Browser specific
+browser_cache/
+browser_logs/
+browser_temp/
+
+# Mobile specific
+mobile_cache/
+mobile_logs/
+mobile_temp/
+
+# Desktop specific
+desktop_cache/
+desktop_logs/
+desktop_temp/
+
+# Web specific
+web_cache/
+web_logs/
+web_temp/
+
+# API specific
+api_cache/
+api_logs/
+api_temp/
+
+# REST specific
+rest_cache/
+rest_logs/
+rest_temp/
+
+# GraphQL specific
+graphql_cache/
+graphql_logs/
+graphql_temp/
+
+# SOAP specific
+soap_cache/
+soap_logs/
+soap_temp/
+
+# WebSocket specific
+websocket_cache/
+websocket_logs/
+websocket_temp/
+
+# HTTP specific
+http_cache/
+http_logs/
+http_temp/
+
+# HTTPS specific
+https_cache/
+https_logs/
+https_temp/
+
+# SSL specific
+ssl_cache/
+ssl_logs/
+ssl_temp/
+
+# TLS specific
+tls_cache/
+tls_logs/
+tls_temp/
+
+# Certificate specific
+certificate_cache/
+certificate_logs/
+certificate_temp/
+
+# Key specific
+key_cache/
+key_logs/
+key_temp/
+
+# Token specific
+token_cache/
+token_logs/
+token_temp/
+
+# Session specific
+session_cache/
+session_logs/
+session_temp/
+
+# Cookie specific
+cookie_cache/
+cookie_logs/
+cookie_temp/
+
+# Header specific
+header_cache/
+header_logs/
+header_temp/
+
+# Body specific
+body_cache/
+body_logs/
+body_temp/
+
+# Query specific
+query_cache/
+query_logs/
+query_temp/
+
+# Parameter specific
+parameter_cache/
+parameter_logs/
+parameter_temp/
+
+# Path specific
+path_cache/
+path_logs/
+path_temp/
+
+# Route specific
+route_cache/
+route_logs/
+route_temp/
+
+# Endpoint specific
+endpoint_cache/
+endpoint_logs/
+endpoint_temp/
+
+# Method specific
+method_cache/
+method_logs/
+method_temp/
+
+# Status specific
+status_cache/
+status_logs/
+status_temp/
+
+# Response specific
+response_cache/
+response_logs/
+response_temp/
+
+# Request specific
+request_cache/
+request_logs/
+request_temp/
+
+# Database specific
+database_cache/
+database_logs/
+database_temp/
+
+# SQL specific
+sql_cache/
+sql_logs/
+sql_temp/
+
+# NoSQL specific
+nosql_cache/
+nosql_logs/
+nosql_temp/
+
+# MongoDB specific
+mongodb_cache/
+mongodb_logs/
+mongodb_temp/
+
+# Redis specific
+redis_cache/
+redis_logs/
+redis_temp/
+
+# PostgreSQL specific
+postgresql_cache/
+postgresql_logs/
+postgresql_temp/
+
+# MySQL specific
+mysql_cache/
+mysql_logs/
+mysql_temp/
+
+# SQLite specific
+sqlite_cache/
+sqlite_logs/
+sqlite_temp/
+
+# Oracle specific
+oracle_cache/
+oracle_logs/
+oracle_temp/
+
+# SQL Server specific
+sqlserver_cache/
+sqlserver_logs/
+sqlserver_temp/
+
+# Cassandra specific
+cassandra_cache/
+cassandra_logs/
+cassandra_temp/
+
+# Elasticsearch specific
+elasticsearch_cache/
+elasticsearch_logs/
+elasticsearch_temp/
+
+# Solr specific
+solr_cache/
+solr_logs/
+solr_temp/
+
+# Hadoop specific
+hadoop_cache/
+hadoop_logs/
+hadoop_temp/
+
+# Spark specific
+spark_cache/
+spark_logs/
+spark_temp/
+
+# Kafka specific
+kafka_cache/
+kafka_logs/
+kafka_temp/
+
+# RabbitMQ specific
+rabbitmq_cache/
+rabbitmq_logs/
+rabbitmq_temp/
+
+# ActiveMQ specific
+activemq_cache/
+activemq_logs/
+activemq_temp/
+
+# ZeroMQ specific
+zeromq_cache/
+zeromq_logs/
+zeromq_temp/
+
+# NATS specific
+nats_cache/
+nats_logs/
+nats_temp/
+
+# MQTT specific
+mqtt_cache/
+mqtt_logs/
+mqtt_temp/
+
+# AMQP specific
+amqp_cache/
+amqp_logs/
+amqp_temp/
+
+# STOMP specific
+stomp_cache/
+stomp_logs/
+stomp_temp/
+
+# WebRTC specific
+webrtc_cache/
+webrtc_logs/
+webrtc_temp/
+
+# WebSocket specific
+websocket_cache/
+websocket_logs/
+websocket_temp/
+
+# SSE specific
+sse_cache/
+sse_logs/
+sse_temp/
+
+# Long polling specific
+longpolling_cache/
+longpolling_logs/
+longpolling_temp/
+
+# Polling specific
+polling_cache/
+polling_logs/
+polling_temp/
+
+# Push specific
+push_cache/
+push_logs/
+push_temp/
+
+# Pull specific
+pull_cache/
+pull_logs/
+pull_temp/
+
+# Streaming specific
+streaming_cache/
+streaming_logs/
+streaming_temp/
+
+# Batch specific
+batch_cache/
+batch_logs/
+batch_temp/
+
+# Real-time specific
+realtime_cache/
+realtime_logs/
+realtime_temp/
+
+# Offline specific
+offline_cache/
+offline_logs/
+offline_temp/
+
+# Online specific
+online_cache/
+online_logs/
+online_temp/
+
+# Hybrid specific
+hybrid_cache/
+hybrid_logs/
+hybrid_temp/
+
+# Cloud specific
+cloud_cache/
+cloud_logs/
+cloud_temp/
+
+# On-premise specific
+onpremise_cache/
+onpremise_logs/
+onpremise_temp/
+
+# Hybrid cloud specific
+hybridcloud_cache/
+hybridcloud_logs/
+hybridcloud_temp/
+
+# Multi-cloud specific
+multicloud_cache/
+multicloud_logs/
+multicloud_temp/
+
+# Serverless specific
+serverless_cache/
+serverless_logs/
+serverless_temp/
+
+# Container specific
+container_cache/
+container_logs/
+container_temp/
+
+# Kubernetes specific
+kubernetes_cache/
+kubernetes_logs/
+kubernetes_temp/
+
+# Docker specific
+docker_cache/
+docker_logs/
+docker_temp/
+
+# Podman specific
+podman_cache/
+podman_logs/
+podman_temp/
+
+# Containerd specific
+containerd_cache/
+containerd_logs/
+containerd_temp/
+
+# CRI-O specific
+cri-o_cache/
+cri-o_logs/
+cri-o_temp/
+
+# Microservices specific
+microservices_cache/
+microservices_logs/
+microservices_temp/
+
+# Monolith specific
+monolith_cache/
+monolith_logs/
+monolith_temp/
+
+# SOA specific
+soa_cache/
+soa_logs/
+soa_temp/
+
+# Event-driven specific
+eventdriven_cache/
+eventdriven_logs/
+eventdriven_temp/
+
+# CQRS specific
+cqrs_cache/
+cqrs_logs/
+cqrs_temp/
+
+# Event sourcing specific
+eventsourcing_cache/
+eventsourcing_logs/
+eventsourcing_temp/
+
+# Domain-driven design specific
+ddd_cache/
+ddd_logs/
+ddd_temp/
+
+# Hexagonal architecture specific
+hexagonal_cache/
+hexagonal_logs/
+hexagonal_temp/
+
+# Clean architecture specific
+cleanarchitecture_cache/
+cleanarchitecture_logs/
+cleanarchitecture_temp/
+
+# Onion architecture specific
+onionarchitecture_cache/
+onionarchitecture_logs/
+onionarchitecture_temp/
+
+# Layered architecture specific
+layeredarchitecture_cache/
+layeredarchitecture_logs/
+layeredarchitecture_temp/
+
+# MVC specific
+mvc_cache/
+mvc_logs/
+mvc_temp/
+
+# MVP specific
+mvp_cache/
+mvp_logs/
+mvp_temp/
+
+# MVVM specific
+mvvm_cache/
+mvvm_logs/
+mvvm_temp/
+
+# Flux specific
+flux_cache/
+flux_logs/
+flux_temp/
+
+# Redux specific
+redux_cache/
+redux_logs/
+redux_temp/
+
+# Vuex specific
+vuex_cache/
+vuex_logs/
+vuex_temp/
+
+# Pinia specific
+pinia_cache/
+pinia_logs/
+pinia_temp/
+
+# Zustand specific
+zustand_cache/
+zustand_logs/
+zustand_temp/
+
+# Jotai specific
+jotai_cache/
+jotai_logs/
+jotai_temp/
+
+# Recoil specific
+recoil_cache/
+recoil_logs/
+recoil_temp/
+
+# MobX specific
+mobx_cache/
+mobx_logs/
+mobx_temp/
+
+# RxJS specific
+rxjs_cache/
+rxjs_logs/
+rxjs_temp/
+
+# Bacon.js specific
+baconjs_cache/
+baconjs_logs/
+baconjs_temp/
+
+# Kefir.js specific
+kefirjs_cache/
+kefirjs_logs/
+kefirjs_temp/
+
+# Most.js specific
+mostjs_cache/
+mostjs_logs/
+mostjs_temp/
+
+# XStream specific
+xstream_cache/
+xstream_logs/
+xstream_temp/
+
+# Callbags specific
+callbags_cache/
+callbags_logs/
+callbags_temp/
+
+# Flyd specific
+flyd_cache/
+flyd_logs/
+flyd_temp/
+
+# Highland.js specific
+highlandjs_cache/
+highlandjs_logs/
+highlandjs_temp/
+
+# Ramda specific
+ramda_cache/
+ramda_logs/
+ramda_temp/
+
+# Lodash specific
+lodash_cache/
+lodash_logs/
+lodash_temp/
+
+# Underscore specific
+underscore_cache/
+underscore_logs/
+underscore_temp/
+
+# jQuery specific
+jquery_cache/
+jquery_logs/
+jquery_temp/
+
+# React specific
+react_cache/
+react_logs/
+react_temp/
+
+# Vue specific
+vue_cache/
+vue_logs/
+vue_temp/
+
+# Angular specific
+angular_cache/
+angular_logs/
+angular_temp/
+
+# Svelte specific
+svelte_cache/
+svelte_logs/
+svelte_temp/
+
+# SolidJS specific
+solidjs_cache/
+solidjs_logs/
+solidjs_temp/
+
+# Preact specific
+preact_cache/
+preact_logs/
+preact_temp/
+
+# Inferno specific
+inferno_cache/
+inferno_logs/
+inferno_temp/
+
+# Mithril specific
+mithril_cache/
+mithril_logs/
+mithril_temp/
+
+# Riot specific
+riot_cache/
+riot_logs/
+riot_temp/
+
+# Polymer specific
+polymer_cache/
+polymer_logs/
+polymer_temp/
+
+# Lit specific
+lit_cache/
+lit_logs/
+lit_temp/
+
+# Stencil specific
+stencil_cache/
+stencil_logs/
+stencil_temp/
+
+# Ionic specific
+ionic_cache/
+ionic_logs/
+ionic_temp/
+
+# Capacitor specific
+capacitor_cache/
+capacitor_logs/
+capacitor_temp/
+
+# Cordova specific
+cordova_cache/
+cordova_logs/
+cordova_temp/
+
+# PhoneGap specific
+phonegap_cache/
+phonegap_logs/
+phonegap_temp/
+
+# React Native specific
+reactnative_cache/
+reactnative_logs/
+reactnative_temp/
+
+# Flutter specific
+flutter_cache/
+flutter_logs/
+flutter_temp/
+
+# Xamarin specific
+xamarin_cache/
+xamarin_logs/
+xamarin_temp/
+
+# NativeScript specific
+nativescript_cache/
+nativescript_logs/
+nativescript_temp/
+
+# Expo specific
+expo_cache/
+expo_logs/
+expo_temp/
+
+# Electron specific
+electron_cache/
+electron_logs/
+electron_temp/
+
+# Tauri specific
+tauri_cache/
+tauri_logs/
+tauri_temp/
+
+# NW.js specific
+nwjs_cache/
+nwjs_logs/
+nwjs_temp/
+
+# PWA specific
+pwa_cache/
+pwa_logs/
+pwa_temp/
+
+# SPA specific
+spa_cache/
+spa_logs/
+spa_temp/
+
+# MPA specific
+mpa_cache/
+mpa_logs/
+mpa_temp/
+
+# SSR specific
+ssr_cache/
+ssr_logs/
+ssr_temp/
+
+# SSG specific
+ssg_cache/
+ssg_logs/
+ssg_temp/
+
+# ISR specific
+isr_cache/
+isr_logs/
+isr_temp/
+
+# CSR specific
+csr_cache/
+csr_logs/
+csr_temp/
+
+# PRPL specific
+prpl_cache/
+prpl_logs/
+prpl_temp/
+
+# App Shell specific
+appshell_cache/
+appshell_logs/
+appshell_temp/
+
+# Service Worker specific
+serviceworker_cache/
+serviceworker_logs/
+serviceworker_temp/
+
+# Web Worker specific
+webworker_cache/
+webworker_logs/
+webworker_temp/
+
+# Shared Worker specific
+sharedworker_cache/
+sharedworker_logs/
+sharedworker_temp/
+
+# Worklet specific
+worklet_cache/
+worklet_logs/
+worklet_temp/
+
+# WASM specific
+wasm_cache/
+wasm_logs/
+wasm_temp/
+
+# WebAssembly specific
+webassembly_cache/
+webassembly_logs/
+webassembly_temp/
+
+# Emscripten specific
+emscripten_cache/
+emscripten_logs/
+emscripten_temp/
+
+# AssemblyScript specific
+assemblyscript_cache/
+assemblyscript_logs/
+assemblyscript_temp/
+
+# Binaryen specific
+binaryen_cache/
+binaryen_logs/
+binaryen_temp/
+
+# LLVM specific
+llvm_cache/
+llvm_logs/
+llvm_temp/
+
+# Clang specific
+clang_cache/
+clang_logs/
+clang_temp/
+
+# GCC specific
+gcc_cache/
+gcc_logs/
+gcc_temp/
+
+# MSVC specific
+msvc_cache/
+msvc_logs/
+msvc_temp/
+
+# Rust specific
+rust_cache/
+rust_logs/
+rust_temp/
+
+# Go specific
+go_cache/
+go_logs/
+go_temp/
+
+# Python specific
+python_cache/
+python_logs/
+python_temp/
+
+# JavaScript specific
+javascript_cache/
+javascript_logs/
+javascript_temp/
+
+# TypeScript specific
+typescript_cache/
+typescript_logs/
+typescript_temp/
+
+# CoffeeScript specific
+coffeescript_cache/
+coffeescript_logs/
+coffeescript_temp/
+
+# Dart specific
+dart_cache/
+dart_logs/
+dart_temp/
+
+# Kotlin specific
+kotlin_cache/
+kotlin_logs/
+kotlin_temp/
+
+# Swift specific
+swift_cache/
+swift_logs/
+swift_temp/
+
+# Scala specific
+scala_cache/
+scala_logs/
+scala_temp/
+
+# Clojure specific
+clojure_cache/
+clojure_logs/
+clojure_temp/
+
+# Haskell specific
+haskell_cache/
+haskell_logs/
+haskell_temp/
+
+# Erlang specific
+erlang_cache/
+erlang_logs/
+erlang_temp/
+
+# Elixir specific
+elixir_cache/
+elixir_logs/
+elixir_temp/
+
+# Ruby specific
+ruby_cache/
+ruby_logs/
+ruby_temp/
+
+# PHP specific
+php_cache/
+php_logs/
+php_temp/
+
+# Perl specific
+perl_cache/
+perl_logs/
+perl_temp/
+
+# Lua specific
+lua_cache/
+lua_logs/
+lua_temp/
+
+# R specific
+r_cache/
+r_logs/
+r_temp/
+
+# MATLAB specific
+matlab_cache/
+matlab_logs/
+matlab_temp/
+
+# Julia specific
+julia_cache/
+julia_logs/
+julia_temp/
+
+# Octave specific
+octave_cache/
+octave_logs/
+octave_temp/
+
+# Scilab specific
+scilab_cache/
+scilab_logs/
+scilab_temp/
+
+# GNU Octave specific
+gnuoctave_cache/
+gnuoctave_logs/
+gnuoctave_temp/
+
+# SageMath specific
+sagemath_cache/
+sagemath_logs/
+sagemath_temp/
+
+# Mathematica specific
+mathematica_cache/
+mathematica_logs/
+mathematica_temp/
+
+# Maple specific
+maple_cache/
+maple_logs/
+maple_temp/
+
+# Maxima specific
+maxima_cache/
+maxima_logs/
+maxima_temp/
+
+# SymPy specific
+sympy_cache/
+sympy_logs/
+sympy_temp/
+
+# NumPy specific
+numpy_cache/
+numpy_logs/
+numpy_temp/
+
+# SciPy specific
+scipy_cache/
+scipy_logs/
+scipy_temp/
+
+# Pandas specific
+pandas_cache/
+pandas_logs/
+pandas_temp/
+
+# Matplotlib specific
+matplotlib_cache/
+matplotlib_logs/
+matplotlib_temp/
+
+# Seaborn specific
+seaborn_cache/
+seaborn_logs/
+seaborn_temp/
+
+# Plotly specific
+plotly_cache/
+plotly_logs/
+plotly_temp/
+
+# Bokeh specific
+bokeh_cache/
+bokeh_logs/
+bokeh_temp/
+
+# Altair specific
+altair_cache/
+altair_logs/
+altair_temp/
+
+# Vega-Lite specific
+vegalite_cache/
+vegalite_logs/
+vegalite_temp/
+
+# D3.js specific
+d3js_cache/
+d3js_logs/
+d3js_temp/
+
+# Chart.js specific
+chartjs_cache/
+chartjs_logs/
+chartjs_temp/
+
+# Highcharts specific
+highcharts_cache/
+highcharts_logs/
+highcharts_temp/
+
+# ApexCharts specific
+apexcharts_cache/
+apexcharts_logs/
+apexcharts_temp/
+
+# Recharts specific
+recharts_cache/
+recharts_logs/
+recharts_temp/
+
+# Victory specific
+victory_cache/
+victory_logs/
+victory_temp/
+
+# Nivo specific
+nivo_cache/
+nivo_logs/
+nivo_temp/
+
+# React-Vis specific
+reactvis_cache/
+reactvis_logs/
+reactvis_temp/
+
+# Visx specific
+visx_cache/
+visx_logs/
+visx_temp/
+
+# D3FC specific
+d3fc_cache/
+d3fc_logs/
+d3fc_temp/
+
+# TensorFlow.js specific
+tensorflowjs_cache/
+tensorflowjs_logs/
+tensorflowjs_temp/
+
+# PyTorch specific
+pytorch_cache/
+pytorch_logs/
+pytorch_temp/
+
+# Keras specific
+keras_cache/
+keras_logs/
+keras_temp/
+
+# TensorFlow specific
+tensorflow_cache/
+tensorflow_logs/
+tensorflow_temp/
+
+# Scikit-learn specific
+scikitlearn_cache/
+scikitlearn_logs/
+scikitlearn_temp/
+
+# XGBoost specific
+xgboost_cache/
+xgboost_logs/
+xgboost_temp/
+
+# LightGBM specific
+lightgbm_cache/
+lightgbm_logs/
+lightgbm_temp/
+
+# CatBoost specific
+catboost_cache/
+catboost_logs/
+catboost_temp/
+
+# H2O specific
+h2o_cache/
+h2o_logs/
+h2o_temp/
+
+# MLflow specific
+mlflow_cache/
+mlflow_logs/
+mlflow_temp/
+
+# DVC specific
+dvc_cache/
+dvc_logs/
+dvc_temp/
+
+# Weights & Biases specific
+wandb_cache/
+wandb_logs/
+wandb_temp/
+
+# Comet ML specific
+cometml_cache/
+cometml_logs/
+cometml_temp/
+
+# Neptune specific
+neptune_cache/
+neptune_logs/
+neptune_temp/
+
+# Sacred specific
+sacred_cache/
+sacred_logs/
+sacred_temp/
+
+# Guild AI specific
+guildai_cache/
+guildai_logs/
+guildai_temp/
+
+# Determined specific
+determined_cache/
+determined_logs/
+determined_temp/
+
+# ClearML specific
+clearml_cache/
+clearml_logs/
+clearml_temp/
+
+# Polyaxon specific
+polyaxon_cache/
+polyaxon_logs/
+polyaxon_temp/
+
+# Kubeflow specific
+kubeflow_cache/
+kubeflow_logs/
+kubeflow_temp/
+
+# Seldon specific
+seldon_cache/
+seldon_logs/
+seldon_temp/
+
+# BentoML specific
+bentoml_cache/
+bentoml_logs/
+bentoml_temp/
+
+# FastAPI specific
+fastapi_cache/
+fastapi_logs/
+fastapi_temp/
+
+# Flask specific
+flask_cache/
+flask_logs/
+flask_temp/
+
+# Django specific
+django_cache/
+django_logs/
+django_temp/
+
+# Express.js specific
+expressjs_cache/
+expressjs_logs/
+expressjs_temp/
+
+# NestJS specific
+nestjs_cache/
+nestjs_logs/
+nestjs_temp/
+
+# Spring Boot specific
+springboot_cache/
+springboot_logs/
+springboot_temp/
+
+# Ruby on Rails specific
+rubyonrails_cache/
+rubyonrails_logs/
+rubyonrails_temp/
+
+# Laravel specific
+laravel_cache/
+laravel_logs/
+laravel_temp/
+
+# ASP.NET Core specific
+aspnetcore_cache/
+aspnetcore_logs/
+aspnetcore_temp/
+
+# .NET Core specific
+dotnetcore_cache/
+dotnetcore_logs/
+dotnetcore_temp/
+
+# Go Gin specific
+gogin_cache/
+gogin_logs/

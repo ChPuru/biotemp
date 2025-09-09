@@ -104,40 +104,51 @@
 
 .algorithm-selection select {
   width: 100%;
-  padding: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 16px;
+  border: 1px solid var(--border-medium);
   border-radius: 8px;
-  font-size: 1em;
+  font-size: 14px;
   margin-bottom: 20px;
-  transition: border-color 0.3s ease;
-  background: #0f1720;
+  transition: all 0.2s ease;
+  background: var(--card-bg);
   color: var(--text-body);
+  font-family: inherit;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
 }
 
 .algorithm-selection select:focus {
   outline: none;
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(0, 170, 255, 0.25);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+  background-color: var(--bg-secondary);
 }
 
 .algorithm-info {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 5px;
+  background: var(--bg-secondary);
+  padding: 16px;
+  border-radius: 8px;
   margin-bottom: 20px;
-  border-left: 4px solid #667eea;
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--accent-primary);
 }
 
 .algorithm-info h4 {
-  color: #333;
+  color: var(--text-heading);
   margin: 0 0 10px 0;
-  font-size: 1.1em;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .algorithm-info p {
   margin: 0 0 10px 0;
   line-height: 1.5;
-  color: #666;
+  color: var(--text-body);
+  font-size: 13px;
 }
 
 .algorithm-info ul {
@@ -147,7 +158,8 @@
 
 .algorithm-info li {
   margin-bottom: 5px;
-  color: #666;
+  color: var(--text-body);
+  font-size: 13px;
 }
 
 .parameters-section {
@@ -164,29 +176,35 @@
 .parameter-subgroup label,
 .parameter-input label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  color: #333;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text-body);
+  font-size: 13px;
 }
 
 .parameter-subgroup {
   margin-left: 20px;
   padding-left: 15px;
-  border-left: 2px solid #e0e0e0;
+  border-left: 2px solid var(--border-light);
 }
 
 .parameter-input input {
   width: 100%;
-  padding: 10px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  font-size: 1em;
-  transition: border-color 0.3s ease;
+  padding: 10px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  background: var(--card-bg);
+  color: var(--text-body);
+  font-family: inherit;
 }
 
 .parameter-input input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+  background-color: var(--bg-secondary);
 }
 
 .submit-section {

@@ -1,0 +1,196 @@
+/* XAI Visualization Component Styles */
+
+.attention-visualization {
+  margin: 20px 0;
+}
+
+.attention-visualization h4 {
+  margin: 0 0 15px 0;
+  color: #1f2937;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.sequence-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #e5e7eb;
+  overflow-x: auto;
+}
+
+.sequence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+  gap: 2px;
+  max-width: 100%;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.nucleotide-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 4px 2px;
+  border-radius: 4px;
+  font-weight: normal;
+  transition: all 0.2s ease;
+  cursor: default;
+  user-select: none;
+}
+
+.nucleotide-cell:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.nucleotide-cell.high {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.attention-legend {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.legend-items {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+}
+
+.legend-color.critical {
+  position: relative;
+}
+
+.legend-color.critical::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #dc2626;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sequence-grid {
+    grid-template-columns: repeat(auto-fill, minmax(25px, 1fr));
+    font-size: 12px;
+  }
+
+  .nucleotide-cell {
+    min-height: 20px;
+    padding: 2px 1px;
+  }
+
+  .legend-items {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sequence-container {
+    padding: 15px;
+  }
+
+  .sequence-grid {
+    grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
+    font-size: 11px;
+    gap: 1px;
+  }
+
+  .nucleotide-cell {
+    min-height: 18px;
+    padding: 1px;
+  }
+}
+
+/* Feature importance chart improvements */
+.xai-modal {
+  max-width: 95vw !important;
+  max-height: 95vh !important;
+  z-index: 10000 !important;
+  position: relative !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.xai-content {
+  min-height: 500px !important;
+}
+
+/* SHAP chart container */
+.xai-modal .chart-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Tab navigation improvements */
+.xai-tabs button {
+  padding: 12px 24px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Modal overlay improvements */
+.xai-modal-overlay {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+/* Prediction summary improvements */
+.prediction-summary {
+  text-align: center;
+  margin-bottom: 30px !important;
+}
+
+.prediction-summary h3 {
+  font-size: 1.4em;
+  margin-bottom: 8px;
+}
+
+.prediction-summary p {
+  font-size: 1.1em;
+  color: #6b7280;
+}

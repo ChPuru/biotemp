@@ -1,0 +1,231 @@
+.interactive-chart {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.chart-title {
+  margin: 0 0 20px 0;
+  color: var(--text-heading);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.chart-navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.back-button {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: var(--accent-primary-dark);
+  transform: translateY(-1px);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-body);
+  font-size: 14px;
+}
+
+.breadcrumb-item {
+  color: var(--text-secondary);
+}
+
+.breadcrumb-item:last-child {
+  color: var(--text-heading);
+  font-weight: 500;
+}
+
+.chart-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.chart-canvas {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 250px;
+  animation: tooltip-fade-in 0.2s ease;
+}
+
+.tooltip-title {
+  font-weight: 600;
+  color: var(--text-heading);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.tooltip-value {
+  color: var(--text-body);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.tooltip-metadata {
+  border-top: 1px solid var(--border-light);
+  padding-top: 8px;
+}
+
+.tooltip-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.tooltip-key {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.tooltip-value {
+  color: var(--text-body);
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  transition: all 0.2s ease;
+}
+
+.legend-item:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  color: var(--text-body);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.legend-value {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .interactive-chart {
+    padding: 16px;
+  }
+  
+  .chart-navigation {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .breadcrumb {
+    font-size: 12px;
+  }
+  
+  .chart-legend {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .legend-item {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .chart-tooltip {
+    max-width: 200px;
+    font-size: 12px;
+  }
+}
+
+/* Chart-specific styles */
+.interactive-chart.bar-chart .chart-canvas {
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.interactive-chart.pie-chart .chart-canvas {
+  background: radial-gradient(circle, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.interactive-chart.line-chart .chart-canvas {
+  background: linear-gradient(90deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.interactive-chart.scatter-chart .chart-canvas {
+  background: var(--bg-primary);
+}
+
+.interactive-chart.tree-chart .chart-canvas {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}

@@ -1,94 +1,93 @@
 import React from 'react';
+import './SkeletonLoader.css';
 
 interface SkeletonLoaderProps {
-  type?: 'text' | 'card' | 'table' | 'avatar' | 'chart';
+  type?: 'text' | 'card' | 'table' | 'chart' | 'list' | 'button';
   lines?: number;
-  width?: string;
   height?: string;
+  width?: string;
   className?: string;
 }
 
-const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ 
-  type = 'text', 
-  lines = 1, 
-  width, 
-  height, 
-  className = '' 
+const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
+  type = 'text',
+  lines = 1,
+  height,
+  width,
+  className = ''
 }) => {
   const renderSkeleton = () => {
     switch (type) {
-      case 'text':
+      case 'card':
         return (
-          <div className={`skeleton ${className}`} style={{ width, height }}>
-            {Array.from({ length: lines }).map((_, index) => (
-              <div 
-                key={index}
-                className={`skeleton-text ${index === lines - 1 ? 'narrow' : index === 0 ? 'wide' : 'medium'}`}
-              />
+          <div className={`skeleton-card ${className}`} style={{ height, width }}>
+            <div className="skeleton-line skeleton-title"></div>
+            <div className="skeleton-line skeleton-content"></div>
+            <div className="skeleton-line skeleton-content short"></div>
+          </div>
+        );
+      
+      case 'table':
+        return (
+          <div className={`skeleton-table ${className}`} style={{ height, width }}>
+            <div className="skeleton-table-header">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="skeleton-line skeleton-header"></div>
+              ))}
+            </div>
+            {Array.from({ length: 5 }).map((_, rowIndex) => (
+              <div key={rowIndex} className="skeleton-table-row">
+                {Array.from({ length: 4 }).map((_, colIndex) => (
+                  <div key={colIndex} className="skeleton-line skeleton-cell"></div>
+                ))}
+              </div>
             ))}
           </div>
         );
-
-      case 'card':
-        return (
-          <div className={`skeleton-card ${className}`} style={{ width, height }}>
-            <div className="skeleton-text wide" />
-            <div className="skeleton-text medium" />
-            <div className="skeleton-text narrow" />
-          </div>
-        );
-
-      case 'avatar':
-        return (
-          <div className={`skeleton skeleton-avatar ${className}`} style={{ width, height }} />
-        );
-
-      case 'table':
-        return (
-          <table className={`skeleton-table ${className}`} style={{ width, height }}>
-            <thead>
-              <tr>
-                <th><div className="skeleton skeleton-text narrow" /></th>
-                <th><div className="skeleton skeleton-text medium" /></th>
-                <th><div className="skeleton skeleton-text narrow" /></th>
-                <th><div className="skeleton skeleton-text medium" /></th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: lines }).map((_, index) => (
-                <tr key={index}>
-                  <td><div className="skeleton skeleton-text narrow" /></td>
-                  <td><div className="skeleton skeleton-text wide" /></td>
-                  <td><div className="skeleton skeleton-text medium" /></td>
-                  <td><div className="skeleton skeleton-text narrow" /></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        );
-
+      
       case 'chart':
         return (
-          <div className={`skeleton ${className}`} style={{ width, height: height || '200px' }}>
-            <div style={{ display: 'flex', alignItems: 'end', gap: '8px', height: '100%', padding: '20px' }}>
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div 
-                  key={index}
-                  className="skeleton"
-                  style={{ 
-                    flex: 1, 
-                    height: `${Math.random() * 60 + 40}%`,
-                    borderRadius: '4px 4px 0 0'
-                  }} 
-                />
-              ))}
+          <div className={`skeleton-chart ${className}`} style={{ height, width }}>
+            <div className="skeleton-chart-title"></div>
+            <div className="skeleton-chart-content">
+              <div className="skeleton-bars">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="skeleton-bar" style={{ height: `${Math.random() * 60 + 20}%` }}></div>
+                ))}
+              </div>
             </div>
           </div>
         );
-
-      default:
+      
+      case 'list':
         return (
-          <div className={`skeleton ${className}`} style={{ width, height }} />
+          <div className={`skeleton-list ${className}`} style={{ height, width }}>
+            {Array.from({ length: lines }).map((_, i) => (
+              <div key={i} className="skeleton-list-item">
+                <div className="skeleton-avatar"></div>
+                <div className="skeleton-list-content">
+                  <div className="skeleton-line skeleton-title"></div>
+                  <div className="skeleton-line skeleton-content"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      
+      case 'button':
+        return (
+          <div className={`skeleton-button ${className}`} style={{ height, width }}>
+            <div className="skeleton-line"></div>
+          </div>
+        );
+      
+      default: // text
+        return (
+          <div className={`skeleton-text ${className}`} style={{ height, width }}>
+            {Array.from({ length: lines }).map((_, i) => (
+              <div key={i} className={`skeleton-line ${i === lines - 1 ? 'short' : ''}`}></div>
+            ))}
+          </div>
         );
     }
   };

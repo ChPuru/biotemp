@@ -3,7 +3,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { enhancedFLService } = require('../services/enhanced_fl_service');
+const enhancedFLService = require('../services/enhanced_fl_service');
 
 // Start enhanced FL server
 router.post('/server/start', async (req, res) => {

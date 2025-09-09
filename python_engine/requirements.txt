@@ -20,11 +20,51 @@ biopython>=1.81
 dendropy>=4.5.2
 ete3>=3.1.2
 
-# Microbiome Analysis Alternatives (Lightweight)
+# Microbiome Analysis (QIIME2-Lite & Advanced Pipeline)
 scikit-bio>=0.5.8
 biom-format>=2.1.12
 dendropy>=4.5.2
 ete3>=3.1.2
+qiime2>=2023.5.0
+q2-types>=2023.5.0
+q2-feature-table>=2023.5.0
+q2-diversity>=2023.5.0
+q2-fragment-insertion>=2023.5.0
+q2-feature-classifier>=2023.5.0
+q2-taxa>=2023.5.0
+q2-phylogeny>=2023.5.0
+q2-alignment>=2023.5.0
+q2-composition>=2023.5.0
+q2-gneiss>=2023.5.0
+q2-longitudinal>=2023.5.0
+q2-sample-classifier>=2023.5.0
+q2-stats>=2023.5.0
+q2-vsearch>=2023.5.0
+q2-cutadapt>=2023.5.0
+q2-dada2>=2023.5.0
+q2-deblur>=2023.5.0
+q2-quality-filter>=2023.5.0
+q2-quality-control>=2023.5.0
+
+# QIIME2 Reference Databases
+q2-emperor>=2023.5.0
+q2-emperor[biplot]>=2023.5.0
+q2-emperor[q2cli]>=2023.5.0
+
+# Advanced Microbiome Analysis
+sourcetracker2>=2.0.0
+picrust2>=2.5.0
+lefse>=1.1.2
+aldex2>=1.32.0
+ancombc>=2.0.0
+phyloseq>=1.44.0
+microbiome>=1.22.0
+mia>=1.9.0
+miaViz>=1.9.0
+TreeSummarizedExperiment>=2.8.0
+MultiAssayExperiment>=1.26.0
+SummarizedExperiment>=1.30.0
+SingleCellExperiment>=1.22.0
 
 # Additional Lightweight Bioinformatics Tools
 biopython>=1.81
@@ -82,8 +122,86 @@ seaborn>=0.12.0
 # Web Interface (Optional)
 streamlit>=1.24.0
 
-# HTTP Requests
+# HTTP Requests & API Integration
 requests>=2.31.0
+httpx>=0.24.0
+aiohttp>=3.8.0
+
+# Database Integration
+pymongo>=4.5.0
+redis>=4.6.0
+motor>=3.3.0
+sqlalchemy>=2.0.0
+
+# Performance Monitoring & System
+psutil>=5.9.0
+GPUtil>=1.4.0
+memory-profiler>=0.61.0
+line-profiler>=4.1.0
+
+# Caching & Optimization
+cachetools>=5.3.0
+diskcache>=5.6.0
+joblib>=1.3.0
+
+# Configuration & Environment
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+
+# Logging & Monitoring
+structlog>=23.1.0
+loguru>=0.7.0
+
+# Async Processing
+asyncio-mqtt>=0.13.0
+celery>=5.3.0
+redis>=4.6.0
+
+# Data Validation & Serialization
+pydantic>=2.0.0
+marshmallow>=3.20.0
+jsonschema>=4.17.0
+
+# Security & Authentication
+cryptography>=41.0.0
+bcrypt>=4.0.0
+passlib>=1.7.4
+
+# File Processing & I/O
+python-multipart>=0.0.6
+aiofiles>=23.1.0
+pathlib2>=2.3.7
+
+# Date & Time Processing
+python-dateutil>=2.8.2
+pytz>=2023.3
+
+# Progress Bars & CLI
+tqdm>=4.65.0
+click>=8.1.0
+rich>=13.5.0
+
+# Testing & Development
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.7.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Documentation
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+# Container & Deployment
+docker>=6.1.0
+kubernetes>=26.1.0
+
+# Cloud Integration
+boto3>=1.28.0
+google-cloud-storage>=2.10.0
+azure-storage-blob>=12.17.0
 
 # Note: sqlite3 is built into Python 3.x
 # Note: ClustalW and MAFFT are external tools, install separately if needed
+# Note: QIIME2 requires conda installation for full functionality

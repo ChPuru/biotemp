@@ -576,6 +576,127 @@ class EnhancedFLService {
             data: { userId, status: data.status }
         });
     }
+
+    // FL Server Management Methods
+    getFLStatus() {
+        return {
+            server_status: 'running',
+            total_clients: this.participants.size,
+            active_clients: Array.from(this.participants.values()).filter(p => p.status === 'active').length,
+            total_sessions: this.activeSessions.size,
+            server_uptime: process.uptime(),
+            memory_usage: process.memoryUsage()
+        };
+    }
+
+    async startFLServer(config = {}) {
+        console.log('Starting FL server with config:', config);
+        return {
+            success: true,
+            server_id: `fl_server_${Date.now()}`,
+            config: config,
+            status: 'running',
+            port: config.port || 8765
+        };
+    }
+
+    async stopFLServer() {
+        console.log('Stopping FL server');
+        return {
+            success: true,
+            status: 'stopped',
+            uptime: process.uptime()
+        };
+    }
+
+    async registerFLClient(clientInfo) {
+        const clientId = clientInfo.client_id;
+        this.participants.set(clientId, {
+            id: clientId,
+            ...clientInfo,
+            registeredAt: new Date(),
+            status: 'registered'
+        });
+
+        console.log(`Registered FL client: ${clientId}`);
+        return {
+            success: true,
+            client_id: clientId,
+            status: 'registered'
+        };
+    }
+
+    async startFLRound(roundConfig) {
+        const roundId = `round_${Date.now()}`;
+        console.log(`Starting FL round: ${roundId}`, roundConfig);
+
+        // Simulate round execution
+        setTimeout(() => {
+            console.log(`FL round ${roundId} completed`);
+        }, 5000);
+
+        return {
+            success: true,
+            round_id: roundId,
+            status: 'started',
+            config: roundConfig,
+            estimated_duration: 30,
+            participating_clients: roundConfig.min_clients || 2
+        };
+    }
+
+    getRoundHistory(limit = 10) {
+        // Return mock round history
+        const mockRounds = [];
+        for (let i = 0; i < Math.min(limit, 5); i++) {
+            mockRounds.push({
+                round_number: i + 1,
+                algorithm: 'fedavg',
+                participating_clients: Math.floor(Math.random() * 5) + 2,
+                metrics: {
+                    global_accuracy: 0.8 + Math.random() * 0.15,
+                    loss: 0.1 + Math.random() * 0.4
+                },
+                start_time: new Date(Date.now() - (i * 60000)),
+                end_time: new Date(Date.now() - ((i-1) * 60000)),
+                status: 'completed'
+            });
+        }
+        return mockRounds;
+    }
+
+    getClientStatistics() {
+        const clients = Array.from(this.participants.values());
+        return {
+            total_clients: clients.length,
+            active_clients: clients.filter(c => c.status === 'active').length,
+            registered_clients: clients.filter(c => c.status === 'registered').length,
+            client_types: clients.reduce((acc, client) => {
+                acc[client.device_type || 'unknown'] = (acc[client.device_type || 'unknown'] || 0) + 1;
+                return acc;
+            }, {}),
+            average_data_size: clients.length > 0 ?
+                clients.reduce((sum, c) => sum + (c.data_size || 0), 0) / clients.length : 0
+        };
+    }
+
+    getAvailableAlgorithms() {
+        return [
+            { name: 'fedavg', description: 'Federated Averaging', complexity: 'low' },
+            { name: 'fedprox', description: 'FedProx with proximal term', complexity: 'medium' },
+            { name: 'scaffold', description: 'SCAFFOLD algorithm', complexity: 'high' },
+            { name: 'fednova', description: 'FedNova with normalized averaging', complexity: 'medium' }
+        ];
+    }
+
+    getAvailablePrivacyTechniques() {
+        return [
+            { name: 'differential_privacy', description: 'Differential Privacy with noise addition', effectiveness: 'high' },
+            { name: 'secure_aggregation', description: 'Secure multi-party computation', effectiveness: 'very_high' },
+            { name: 'homomorphic_encryption', description: 'Homomorphic encryption', effectiveness: 'very_high' },
+            { name: 'local_dp', description: 'Local differential privacy', effectiveness: 'medium' }
+        ];
+    }
 }
 
 module.exports = new EnhancedFLService();

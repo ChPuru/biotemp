@@ -38,27 +38,38 @@
     gap: 15px;
     margin-bottom: 20px;
     padding: 20px;
-    background-color: #1e1e1e;
+    background-color: var(--card-bg);
     border-radius: 8px;
+    border: 1px solid var(--border-light);
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
+    gap: 6px;
 }
 
 .input-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #e0e0e0;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--text-heading);
+    font-size: 14px;
 }
 
 .input-group input {
-    padding: 8px;
-    background-color: #333;
-    color: #e0e0e0;
-    border: 1px solid #555;
-    border-radius: 4px;
+    padding: 12px;
+    background-color: var(--bg-secondary);
+    color: var(--text-body);
+    border: 1px solid var(--border-medium);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
 }
 
 .satellite-actions {
@@ -70,31 +81,37 @@
 
 .satellite-actions button {
     padding: 12px 20px;
-    background-color: #2a9d8f;
+    background: var(--gradient-primary);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
 }
 
 .satellite-actions button:hover:not(:disabled) {
-    background-color: #248a7f;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .satellite-actions button:disabled {
-    background-color: #555;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .satellite-results, .habitat-results, .hotspots-results {
     margin-top: 30px;
     padding: 20px;
-    background-color: #1e1e1e;
+    background-color: var(--card-bg);
     border-radius: 8px;
-    border: 1px solid #444;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
 }
 
 .satellite-image {

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Bar, Line, Radar } from 'react-chartjs-2';
+import './XAIVisualization.css';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -201,45 +202,37 @@ const XAIVisualization: React.FC<XAIVisualizationProps> = ({
     return (
       <div className="attention-visualization">
         <h4>Sequence Attention Weights</h4>
-        <div className="sequence-container" style={{ 
-          fontFamily: 'monospace', 
-          fontSize: '14px',
-          lineHeight: '1.8',
-          padding: '20px',
-          backgroundColor: '#f8f9fa',
-          borderRadius: '8px',
-          overflowX: 'auto'
-        }}>
-          {xaiData.attentionWeights.map((att, index) => (
-            <span
-              key={index}
-              style={{
-                backgroundColor: `rgba(59, 130, 246, ${att.weight})`,
-                color: att.weight > 0.6 ? 'white' : 'black',
-                padding: '2px 4px',
-                margin: '1px',
-                borderRadius: '3px',
-                fontWeight: att.importance === 'high' ? 'bold' : 'normal',
-                border: att.importance === 'high' ? '2px solid #dc2626' : 'none'
-              }}
-              title={`Position ${att.position}: ${att.nucleotide} (Weight: ${att.weight.toFixed(3)})`}
-            >
-              {att.nucleotide}
-            </span>
-          ))}
+        <div className="sequence-container">
+          <div className="sequence-grid">
+            {xaiData.attentionWeights.map((att, index) => (
+              <div
+                key={index}
+                className={`nucleotide-cell ${att.importance}`}
+                style={{
+                  backgroundColor: `rgba(59, 130, 246, ${att.weight})`,
+                  color: att.weight > 0.6 ? 'white' : 'black',
+                  fontWeight: att.importance === 'high' ? 'bold' : 'normal',
+                  border: att.importance === 'high' ? '2px solid #dc2626' : '1px solid #e5e7eb'
+                }}
+                title={`Position ${att.position}: ${att.nucleotide} (Weight: ${att.weight.toFixed(3)})`}
+              >
+                {att.nucleotide}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="attention-legend" style={{ marginTop: '15px' }}>
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{ width: '20px', height: '15px', backgroundColor: 'rgba(59, 130, 246, 0.2)' }}></div>
+        <div className="attention-legend">
+          <div className="legend-items">
+            <div className="legend-item">
+              <div className="legend-color" style={{ backgroundColor: 'rgba(59, 130, 246, 0.2)' }}></div>
               <span>Low Attention</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{ width: '20px', height: '15px', backgroundColor: 'rgba(59, 130, 246, 0.8)' }}></div>
+            <div className="legend-item">
+              <div className="legend-color" style={{ backgroundColor: 'rgba(59, 130, 246, 0.8)' }}></div>
               <span>High Attention</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{ width: '20px', height: '15px', backgroundColor: 'rgba(59, 130, 246, 0.6)', border: '2px solid #dc2626' }}></div>
+            <div className="legend-item">
+              <div className="legend-color critical" style={{ backgroundColor: 'rgba(59, 130, 246, 0.6)', border: '2px solid #dc2626' }}></div>
               <span>Critical Region</span>
             </div>
           </div>

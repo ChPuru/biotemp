@@ -6,11 +6,10 @@ import { useTranslation } from 'react-i18next';
 import './App.scss';
 import AnalysisPage from './pages/AnalysisPage';
 import AdminPage from './pages/AdminPage';
-import MarketPage from './pages/MarketPage';
+// import MarketPage from './pages/MarketPage';
 import SatellitePage from './pages/SatellitePage';
 import CollaborativePage from './pages/CollaborativePage';
 import QuantumSimulator from './components/QuantumSimulator';
-import FederatedLearningSimulator from './components/FederatedLearningSimulator';
 import ErrorBoundary from './components/ErrorBoundary';
 import ErrorNotification from './components/ErrorNotification';
 import LoginModal from './components/LoginModal';
@@ -18,12 +17,14 @@ import { useErrorHandler } from './hooks/useErrorHandler';
 import offlineStorage from './services/offlineStorage';
 import logo from './assets/logo.png';
 import BioluminescentBackground from './components/BioluminescentBackground';
+import ToastContainer from './components/ToastContainer';
 
-const NavLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => {
+const NavLink: React.FC<{ to: string; children: React.ReactNode; icon?: string }> = ({ to, children, icon }) => {
     const location = useLocation();
     const isActive = location.pathname === to;
     return (
         <Link to={to} className={isActive ? 'nav-link active' : 'nav-link'}>
+            {icon && <span className="nav-icon">{icon}</span>}
             {children}
         </Link>
     );
@@ -34,6 +35,7 @@ function App() {
   const { error, clearError } = useErrorHandler();
   const [showLogin, setShowLogin] = React.useState(false);
   const [user, setUser] = React.useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
   // Initialize offline storage capabilities
   useEffect(() => {
@@ -70,24 +72,36 @@ function App() {
     setUser(null);
   };
 
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
+
   return (
     <ErrorBoundary>
-      <Router>
-        <div className="App">
-          <BioluminescentBackground />
-          <aside className="sidebar">
+      <ToastContainer>
+        <Router>
+          <div className="App">
+            <BioluminescentBackground />
+          <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
             <div className="sidebar-header">
               <img src={logo} alt="BioMapper Logo" className="sidebar-logo" />
-              <span className="sidebar-title">{t('title')}</span>
+              {!sidebarCollapsed && <span className="sidebar-title">{t('title')}</span>}
+              <button
+                onClick={toggleSidebar}
+                className="sidebar-toggle"
+                title={sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+              >
+                {sidebarCollapsed ? '→' : '←'}
+              </button>
             </div>
             <nav className="sidebar-nav">
-              <NavLink to="/">Analysis</NavLink>
-              <NavLink to="/satellite">Satellite Intelligence</NavLink>
-              <NavLink to="/collaborative">Collaborative Workspace</NavLink>
-              <NavLink to="/quantum">Quantum Simulator</NavLink>
-              <NavLink to="/federated-learning">Federated Learning</NavLink>
-              <NavLink to="/admin">Admin Panel</NavLink>
-              <NavLink to="/market">Bio-Market</NavLink>
+              <NavLink to="/" icon="🧬">{sidebarCollapsed ? '' : 'Analysis'}</NavLink>
+              <NavLink to="/satellite" icon="🛰️">{sidebarCollapsed ? '' : 'Satellite Intelligence'}</NavLink>
+              <NavLink to="/collaborative" icon="👥">{sidebarCollapsed ? '' : 'Collaborative Workspace'}</NavLink>
+              <NavLink to="/quantum" icon="⚛️">{sidebarCollapsed ? '' : 'Quantum Simulator'}</NavLink>
+              <NavLink to="/admin" icon="⚙️">{sidebarCollapsed ? '' : 'Admin Panel'}</NavLink>
+              {/* <NavLink to="/market" icon="🛒">{sidebarCollapsed ? '' : 'Bio-Market'}</NavLink> */}
             </nav>
             <div className="sidebar-controls">
               <h3>{t('controls_header')}</h3>
@@ -127,9 +141,8 @@ function App() {
                 <Route path="/satellite" element={<SatellitePage />} />
                 <Route path="/collaborative" element={<CollaborativePage />} />
                 <Route path="/quantum" element={<QuantumSimulator />} />
-                <Route path="/federated-learning" element={<FederatedLearningSimulator />} />
                 <Route path="/admin" element={<AdminPage />} />
-                <Route path="/market" element={<MarketPage />} />
+                {/* <Route path="/market" element={<MarketPage />} /> */}
               </Routes>
             </ErrorBoundary>
           </main>
@@ -141,6 +154,7 @@ function App() {
           />
         </div>
       </Router>
+      </ToastContainer>
     </ErrorBoundary>
   );
 }

@@ -1,0 +1,217 @@
+/* Quantum Analysis Styles */
+.quantum-sequence-input {
+  margin-bottom: 20px;
+}
+
+.quantum-input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-heading);
+  font-size: 14px;
+}
+
+.quantum-input-field {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text-body);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.quantum-input-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+  background: var(--bg-secondary);
+}
+
+.quantum-input-field::placeholder {
+  color: var(--text-secondary);
+}
+
+.quantum-analysis-button {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.quantum-analysis-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.quantum-analysis-button:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* File Upload Styles */
+.file-upload-container {
+  margin-bottom: 20px;
+}
+
+.file-upload-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-heading);
+  font-size: 14px;
+}
+
+.file-upload-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text-body);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.file-upload-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+  background: var(--bg-secondary);
+}
+
+/* Analysis Type Select */
+.analysis-type-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text-body);
+  transition: all 0.2s ease;
+  font-family: inherit;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+.analysis-type-select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+  background-color: var(--bg-secondary);
+}
+
+/* Parameter Input Groups */
+.parameter-group {
+  margin-bottom: 16px;
+}
+
+.parameter-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: var(--text-body);
+  font-size: 13px;
+}
+
+.parameter-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  font-size: 14px;
+  background: var(--card-bg);
+  color: var(--text-body);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.parameter-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+  background: var(--bg-secondary);
+}
+
+/* Results Display */
+.analysis-results {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+}
+
+.results-title {
+  color: var(--text-heading);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.results-content {
+  color: var(--text-body);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Loading States */
+.loading-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-light);
+  border-radius: 50%;
+  border-top-color: var(--accent-primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quantum-sequence-input,
+  .file-upload-container,
+  .parameter-group {
+    margin-bottom: 16px;
+  }
+  
+  .quantum-analysis-button {
+    width: 100%;
+    padding: 14px 20px;
+  }
+  
+  .quantum-input-field,
+  .file-upload-input,
+  .analysis-type-select,
+  .parameter-input {
+    font-size: 16px; /* Prevent zoom on mobile */
+  }
+}

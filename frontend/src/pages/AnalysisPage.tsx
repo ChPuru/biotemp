@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Dashboard from '../components/Dashboard';
 import ARViewer from '../components/ARViewer';
 import { useTranslation } from 'react-i18next';
+import './AnalysisPage.css';
 
 const API_BASE = 'http://localhost:5001/api';
 
@@ -15,7 +16,7 @@ interface AnalysisResult {
 }
 
 const AnalysisPage: React.FC = () => {
-    const { t } = useTranslation();
+    // const { t } = useTranslation(); // Unused for now
     const [activeTab, setActiveTab] = useState('core');
     const [showAR, setShowAR] = useState(false);
     const [analysisResults, setAnalysisResults] = useState<any>(null);
@@ -567,8 +568,8 @@ const AnalysisPage: React.FC = () => {
                             </div>
 
                             {(quantumParams.analysisType === 'sequence_alignment' || quantumParams.analysisType === 'clustering') && (
-                                <div style={{ marginBottom: '20px' }}>
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+                                <div className="quantum-sequence-input">
+                                    <label className="quantum-input-label">
                                         Sequence 1:
                                     </label>
                                     <input
@@ -576,16 +577,9 @@ const AnalysisPage: React.FC = () => {
                                         value={quantumParams.seq1}
                                         onChange={(e) => setQuantumParams({...quantumParams, seq1: e.target.value})}
                                         placeholder="Enter DNA sequence (e.g., ATCGATCG)"
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            borderRadius: '8px',
-                                            border: '1px solid #ddd',
-                                            fontSize: '14px',
-                                            marginBottom: '10px'
-                                        }}
+                                        className="quantum-input-field"
                                     />
-                                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+                                    <label className="quantum-input-label">
                                         Sequence 2:
                                     </label>
                                     <input
@@ -593,13 +587,7 @@ const AnalysisPage: React.FC = () => {
                                         value={quantumParams.seq2}
                                         onChange={(e) => setQuantumParams({...quantumParams, seq2: e.target.value})}
                                         placeholder="Enter DNA sequence (e.g., ATCGTTCG)"
-                                        style={{
-                                            width: '100%',
-                                            padding: '10px',
-                                            borderRadius: '8px',
-                                            border: '1px solid #ddd',
-                                            fontSize: '14px'
-                                        }}
+                                        className="quantum-input-field"
                                     />
                                 </div>
                             )}
@@ -607,17 +595,7 @@ const AnalysisPage: React.FC = () => {
                             <button
                                 onClick={handleQuantumAnalysis}
                                 disabled={loading}
-                                style={{
-                                    background: loading ? '#95a5a6' : 'linear-gradient(135deg, #667eea, #764ba2)',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '12px 30px',
-                                    borderRadius: '25px',
-                                    cursor: loading ? 'not-allowed' : 'pointer',
-                                    fontWeight: 'bold',
-                                    fontSize: '16px',
-                                    boxShadow: '0 4px 15px rgba(102,126,234,0.3)'
-                                }}
+                                className="quantum-analysis-button"
                             >
                                 {loading ? '🔄 Processing...' : '⚛️ Run Quantum Analysis'}
                             </button>

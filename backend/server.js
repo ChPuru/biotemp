@@ -56,6 +56,7 @@ const metaAnalysisRoutes = require('./routes/meta_analysis');
 const climateIntegrationRoutes = require('./routes/climate_integration');
 const economicModelingRoutes = require('./routes/economic_modeling');
 const globalMonitoringRoutes = require('./routes/global_monitoring');
+const indianSpeciesRoutes = require('./routes/indian_species');
 
 app.use('/api/analysis', analysisRoutes);
 app.use('/api/collaboration', collaborationRoutes);
@@ -79,6 +80,7 @@ app.use('/api/meta-analysis', metaAnalysisRoutes);
 app.use('/api/climate-integration', climateIntegrationRoutes);
 app.use('/api/economic-modeling', economicModelingRoutes);
 app.use('/api/global-monitoring', globalMonitoringRoutes);
+app.use('/api/indian-species', indianSpeciesRoutes);
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {

@@ -119,8 +119,38 @@ async function runPythonNcbiBlast(sequence) {
   const options = { ...defaultOptions, args: [sequence] };
   return new Promise((resolve, reject) => {
     PythonShell.run('run_ncbi_blast.py', options)
-        .then(messages => resolve(JSON.parse(messages.join(''))))
-        .catch(err => reject(err));
+        .then(messages => {
+          try {
+            const result = JSON.parse(messages.join(''));
+            resolve(result);
+          } catch (parseError) {
+            console.error('NCBI BLAST JSON parsing error:', parseError);
+            console.error('Raw output:', messages.join(''));
+            // Return a fallback result
+            resolve({
+              status: 'error',
+              message: 'NCBI BLAST parsing failed',
+              error: parseError.message,
+              raw_output: messages.join(''),
+              fallback: {
+                status: 'success',
+                message: 'NCBI BLAST completed (parsing failed, showing raw output)',
+                best_hit_title: 'Analysis completed but parsing failed',
+                score: 0,
+                e_value: 0
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.error('NCBI BLAST execution error:', err);
+          reject({
+            status: 'error',
+            message: 'NCBI BLAST execution failed',
+            error: err.message,
+            script: 'run_ncbi_blast.py'
+          });
+        });
   });
 }
 

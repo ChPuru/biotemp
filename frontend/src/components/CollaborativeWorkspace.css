@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #f8f9fa;
+  background: var(--bg-primary);
 }
 
 .workspace-header {
@@ -10,28 +10,30 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: white;
-  border-bottom: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
 }
 
 .workspace-header h2 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--text-heading);
 }
 
 .chat-toggle-btn {
   padding: 0.5rem 1rem;
-  background: #007bff;
+  background: var(--gradient-primary);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .chat-toggle-btn:hover {
-  background: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .workspace-content {
@@ -44,21 +46,23 @@
   flex: 1;
   padding: 1rem;
   overflow-y: auto;
+  min-width: 400px;
 }
 
 /* Session Management */
 .session-management {
-  background: white;
+  background: var(--card-bg);
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
   margin-bottom: 1rem;
+  border: 1px solid var(--border-light);
 }
 
 .session-management h3 {
   margin-top: 0;
-  color: #2c3e50;
-  border-bottom: 2px solid #007bff;
+  color: var(--text-heading);
+  border-bottom: 2px solid var(--accent-primary);
   padding-bottom: 0.5rem;
 }
 
@@ -70,43 +74,81 @@
 }
 
 .session-card {
-  background: #f8f9fa;
-  border: 1px solid #dee2e6;
-  border-radius: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
   padding: 1rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
   cursor: pointer;
+  box-shadow: var(--shadow-xs);
 }
 
 .session-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-primary);
 }
 
 .session-card h4 {
   margin: 0 0 0.5rem 0;
-  color: #2c3e50;
+  color: var(--text-heading);
+  font-weight: 600;
 }
 
 .session-card p {
   margin: 0.25rem 0;
-  color: #6c757d;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .session-card button {
   margin-top: 0.5rem;
   padding: 0.5rem 1rem;
-  background: #28a745;
+  background: var(--gradient-primary);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   width: 100%;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .session-card button:hover {
-  background: #218838;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Input styling for collaborative workspace */
+.create-session-form input,
+.chat-input input {
+  padding: 12px;
+  background-color: var(--bg-secondary);
+  color: var(--text-body);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.create-session-form input:focus,
+.chat-input input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb), 0.1);
+}
+
+.create-session-form {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.create-session-form input {
+  margin-bottom: 0.5rem;
 }
 
 /* Active Session */
@@ -318,12 +360,13 @@
 
 /* Chat Panel */
 .chat-panel {
-  width: 350px;
+  flex: 1;
   background: white;
   border-left: 1px solid #e9ecef;
   display: flex;
   flex-direction: column;
   box-shadow: -2px 0 4px rgba(0,0,0,0.1);
+  min-width: 300px;
 }
 
 .chat-header {
@@ -509,11 +552,16 @@
     flex-direction: column;
   }
 
+  .main-workspace {
+    min-width: unset;
+  }
+
   .chat-panel {
-    width: 100%;
+    flex: 1;
     border-left: none;
     border-top: 1px solid #e9ecef;
     max-height: 300px;
+    min-width: unset;
   }
 
   .sessions-grid {

@@ -51,30 +51,54 @@ const TrainingDashboard: React.FC = () => {
   const fetchTrainingJobs = async () => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('No authentication token found');
+        return;
+      }
+
       const response = await axios.get('http://localhost:5001/api/training/jobs', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (response.data.success) {
         setActiveJobs(response.data.jobs);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch training jobs:', error);
+      if (error.response?.status === 401) {
+        console.warn('Authentication required for training jobs');
+      } else if (error.response?.status === 404) {
+        console.warn('Training jobs endpoint not available');
+      }
+      // Set empty jobs array to prevent further errors
+      setActiveJobs([]);
     }
   };
 
   const fetchTrainingHistory = async () => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('No authentication token found');
+        return;
+      }
+
       const response = await axios.get('http://localhost:5001/api/training/history', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (response.data.success) {
         setTrainingHistory(response.data.history);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch training history:', error);
+      if (error.response?.status === 401) {
+        console.warn('Authentication required for training history');
+      } else if (error.response?.status === 404) {
+        console.warn('Training history endpoint not available');
+      }
+      // Set empty history array to prevent further errors
+      setTrainingHistory([]);
     }
   };
 
@@ -82,17 +106,28 @@ const TrainingDashboard: React.FC = () => {
     setIsRetraining(true);
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Authentication required. Please log in.');
+        return;
+      }
+
       const response = await axios.post('http://localhost:5001/api/training/retrain', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (response.data.success) {
         alert(`Training job started: ${response.data.jobId}`);
         fetchTrainingJobs();
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to start retraining:', error);
-      alert('Failed to start retraining job');
+      if (error.response?.status === 401) {
+        alert('Authentication required. Please log in again.');
+      } else if (error.response?.status === 404) {
+        alert('Retraining endpoint not available. This is a demo feature.');
+      } else {
+        alert('Failed to start retraining job');
+      }
     } finally {
       setIsRetraining(false);
     }
@@ -101,22 +136,37 @@ const TrainingDashboard: React.FC = () => {
   const fetchJobStatus = async (jobId: string) => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('No authentication token found');
+        return;
+      }
+
       const response = await axios.get(`http://localhost:5001/api/training/status/${jobId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (response.data.success) {
         setJobLogs(response.data.job);
         setSelectedJob(jobId);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch job status:', error);
+      if (error.response?.status === 401) {
+        console.warn('Authentication required for job status');
+      } else if (error.response?.status === 404) {
+        console.warn('Job status endpoint not available');
+      }
     }
   };
 
   const addAnnotationFeedback = async (sequenceId: string, originalPrediction: string, userFeedback: string, confidence: number) => {
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Authentication required. Please log in.');
+        return;
+      }
+
       await axios.post('http://localhost:5001/api/training/feedback', {
         sequenceId,
         originalPrediction,
@@ -125,11 +175,15 @@ const TrainingDashboard: React.FC = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       alert('Annotation feedback added for future training');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to add feedback:', error);
-      alert('Failed to add annotation feedback');
+      if (error.response?.status === 401) {
+        alert('Authentication required. Please log in again.');
+      } else {
+        alert('Failed to add annotation feedback');
+      }
     }
   };
 

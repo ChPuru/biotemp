@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TrainingDashboard from '../components/TrainingDashboard';
+import './AdminPage.css';
 
 interface IAnnotation {
     _id: string;
@@ -19,14 +20,24 @@ const AdminPage: React.FC = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get('http://localhost:5001/api/analysis/admin/annotations', { 
-            headers: { 
+        if (!token) {
+            console.warn("No authentication token found");
+            return;
+        }
+
+        axios.get('http://localhost:5001/api/analysis/admin/annotations', {
+            headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            } 
+            }
         })
             .then(res => setAnnotations(res.data))
-            .catch(err => console.error("Failed to fetch annotations:", err));
+            .catch(err => {
+                console.error("Failed to fetch annotations:", err);
+                if (err.response?.status === 401) {
+                    alert("Authentication required. Please log in again.");
+                }
+            });
     }, []);
 
     const handleRetrain = async () => {
@@ -107,103 +118,6 @@ const AdminPage: React.FC = () => {
                 <TrainingDashboard />
             )}
 
-            <style>{`
-                .admin-page {
-                    padding: 20px;
-                    background: #1a1a1a;
-                    color: white;
-                    min-height: 100vh;
-                }
-
-                .admin-header {
-                    margin-bottom: 30px;
-                }
-
-                .admin-header h1 {
-                    margin-bottom: 20px;
-                    color: #00ff88;
-                }
-
-                .tab-navigation {
-                    display: flex;
-                    gap: 10px;
-                    border-bottom: 1px solid #333;
-                    padding-bottom: 10px;
-                }
-
-                .tab-btn {
-                    background: none;
-                    border: none;
-                    color: #888;
-                    padding: 10px 20px;
-                    cursor: pointer;
-                    border-radius: 5px 5px 0 0;
-                    transition: all 0.2s;
-                }
-
-                .tab-btn.active {
-                    background: #333;
-                    color: #00ff88;
-                }
-
-                .tab-btn:hover {
-                    background: #2a2a2a;
-                    color: white;
-                }
-
-                .overview-tab {
-                    background: #2a2a2a;
-                    padding: 20px;
-                    border-radius: 0 12px 12px 12px;
-                }
-
-                .section-title {
-                    margin-top: 30px;
-                    color: #00ff88;
-                }
-
-                .retrain-button {
-                    background: linear-gradient(135deg, #00ff88, #00cc66);
-                    color: white;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 25px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: transform 0.2s;
-                }
-
-                .retrain-button:hover:not(:disabled) {
-                    transform: scale(1.05);
-                }
-
-                .retrain-button:disabled {
-                    opacity: 0.6;
-                    cursor: not-allowed;
-                }
-
-                .results-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 20px;
-                }
-
-                .results-table th,
-                .results-table td {
-                    padding: 12px;
-                    text-align: left;
-                    border-bottom: 1px solid #444;
-                }
-
-                .results-table th {
-                    background: #333;
-                    color: #00ff88;
-                }
-
-                .results-table tr:hover {
-                    background: #333;
-                }
-            `}</style>
         </div>
     );
 };
