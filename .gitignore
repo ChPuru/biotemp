@@ -113,6 +113,10 @@ wheels/
 *.egg
 MANIFEST
 
+# Submodules (not meant to be pushed)
+python_engine/alphafold/
+python_engine/openfold/
+
 # PyInstaller
 *.manifest
 *.spec
